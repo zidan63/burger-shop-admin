@@ -1,0 +1,17 @@
+services:
+  dev:
+    image: node:18-alpine
+    working_dir: /app
+    command: sh -c "yarn --frozen-lockfile && yarn dev"
+    env_file: .env
+    ports:
+      - "${PORT}:${PORT}"
+    volumes:
+      - ./:/app
+
+  prod:
+    image: schat/nextjs
+    build: .
+    env_file: .env
+    ports:
+      - "${PORT}:${PORT}"
