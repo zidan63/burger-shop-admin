@@ -21,9 +21,9 @@ export const middleware = async (req: NextRequest) => {
 
     const { accessToken } = session;
 
-    if (!accessToken) {
-      return NextResponse.redirect(new URL("/login", req.url));
-    }
+    // if (!accessToken) {
+    //   return NextResponse.redirect(new URL("/login", req.url));
+    // }
   }
 
   return res;

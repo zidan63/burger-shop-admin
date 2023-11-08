@@ -7,10 +7,14 @@ import { userSlice } from "./user";
 import { roleSlice } from "./role";
 
 import { authSlice } from "./auth";
+import { productSlice } from "./product";
+import { suplierSlice } from "./suplier";
 
 const rootReducer = combineReducers({
   auth: authSlice.reducer,
   user: userSlice.reducer,
+  product: productSlice.reducer,
+  suplier: suplierSlice.reducer,
   role: roleSlice.reducer,
 });
 
