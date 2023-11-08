@@ -28,7 +28,7 @@ export const SideBarRoute: SubNavItem[] = [
     title: "Quản lý sản phẩm",
   },
   {
-    href: "/provider",
+    href: "/suplier",
     icon: <MapsHomeWorkIcon fontSize="small" />,
     title: "Quản lý nhà cung cấp",
   },
