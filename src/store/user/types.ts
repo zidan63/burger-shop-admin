@@ -13,8 +13,6 @@ export type UserFilter = BaseFilter & {
   workUnitIds?: string[];
   createdAtTo?: number;
   createdAtFrom?: number;
-  updatedAtTo?: number;
-  updatedAtFrom?: number;
 };
 
 export type UserForm = {

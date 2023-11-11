@@ -5,10 +5,6 @@ export type Suplier = BaseRecord & {
   name: string;
   address: string;
   phone: string;
-  createdAtTo: number;
-  createdAtFrom: number;
-  updatedAtTo: number;
-  updatedAtFrom: number;
 };
 
 export type CreateSuplier = Omit<Suplier, keyof BaseRecord>;

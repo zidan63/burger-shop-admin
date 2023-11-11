@@ -14,18 +14,18 @@ import { ButtonCustom } from "@components/_common/ButtonCustom";
 
 import { NotificationUtil } from "@utils/NotificationUtil";
 import { FormUtil } from "@utils/FormUtil";
-import { ProductSelectors, ProductThunks } from "@store/product";
+import { CategorySelectors, CategoryThunks } from "@store/category";
 import { SuplierSelectors } from "@store/suplier";
 import { Suplier } from "@services/suplier";
 
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
-const validationUpdateProduct = Yup.object().shape({
+const validationUpdateCategory = Yup.object().shape({
   code: Yup.string()
-    .required("Mã sản phẩm bắt buộc nhập!")
-    .min(6, "Mã sản phẩm tối thiểu 6 kí tự!")
-    .max(15, "Mã sản phẩm tối đa 15 kí tự!"),
+    .required("Mã loại sản phẩm bắt buộc nhập!")
+    .min(6, "Mã loại sản phẩm tối thiểu 6 kí tự!")
+    .max(15, "Mã loại sản phẩm tối đa 15 kí tự!"),
   fullName: Yup.string()
     .required("Họ và tên bắt buộc nhập!")
     .min(6, "Họ và tên tối thiểu 6 kí tự!")
@@ -47,7 +47,7 @@ const validationUpdateProduct = Yup.object().shape({
   roleIds: Yup.array().min(1, "Vai trò bắt buộc nhập!"),
 });
 
-const validationCreateProduct = Yup.object().shape({
+const validationCreateCategory = Yup.object().shape({
   password: Yup.string()
     .required("Mật khẩu bắt buộc nhập")
     .min(6, "Mật khẩu tối thiểu 6 kí tự!")
@@ -61,56 +61,44 @@ const validationCreateProduct = Yup.object().shape({
     .oneOf([Yup.ref("password")], "Mật khẩu không khớp!"),
 });
 
-export const ProductForm: React.FC = () => {
-  const { product } = useAppSelector(ProductSelectors.getForm());
-  const { supliers } = useAppSelector(SuplierSelectors.getAll());
+export const CategoryForm: React.FC = () => {
+  const { category } = useAppSelector(CategorySelectors.getForm());
 
   const dispatch = useAppDispatch();
 
   const formik = useFormik({
-    initialValues: product
-      ? product
+    initialValues: category
+      ? category
       : {
           id: "",
           name: "",
-          color: "",
-          suplierId: "",
-          suplierDisplay: "",
         },
-    validationSchema: product
-      ? validationUpdateProduct
-      : validationUpdateProduct.concat(validationCreateProduct),
+    validationSchema: category
+      ? validationUpdateCategory
+      : validationUpdateCategory.concat(validationCreateCategory),
     validateOnChange: false,
     onSubmit: (values) => {
-      if (product !== null) return handleUpdateProduct(values);
-      else handleCreateProduct(values);
+      if (category !== null) return handleUpdateCategory(values);
+      else handleCreateCategory(values);
     },
   });
 
-  const suplierSelected = useMemo(() => {
-    return supliers.find((s) => formik.values.roleIds.includes(s.id));
-  }, [supliers, formik.values.suplierId]);
+  const handleCreateCategory = async (values) => {
+    const result = await dispatch(CategoryThunks.create(values));
+    if (CategoryThunks.create.rejected.match(result)) return formik.setSubmitting(false);
 
-  const handleCreateProduct = async (values) => {
-    const result = await dispatch(ProductThunks.create(values));
-    if (ProductThunks.create.rejected.match(result)) return formik.setSubmitting(false);
-
-    NotificationUtil.success("Đã thêm sản phẩm thành công");
+    NotificationUtil.success("Đã thêm loại sản phẩm thành công");
     formik.resetForm();
   };
 
-  const handleUpdateProduct = async (values) => {
-    if (!product) return;
+  const handleUpdateCategory = async (values) => {
+    if (!category) return;
     const editedFields = FormUtil.getDirtyValues(values, formik.initialValues);
-    const result = await dispatch(ProductThunks.update({ id: product.id, product: editedFields }));
-    if (ProductThunks.update.rejected.match(result)) return formik.setSubmitting(false);
-    NotificationUtil.success("Đã chỉnh sửa sản phẩm thành công");
-  };
-
-  const handleRoleChange = (value: Suplier | null) => {
-    if (!value) return;
-    formik.setFieldValue("suplierId", value.id);
-    formik.setFieldValue("suplierDisplay", value.name);
+    const result = await dispatch(
+      CategoryThunks.update({ id: category.id, category: editedFields })
+    );
+    if (CategoryThunks.update.rejected.match(result)) return formik.setSubmitting(false);
+    NotificationUtil.success("Đã chỉnh sửa loại sản phẩm thành công");
   };
 
   return (
@@ -125,7 +113,7 @@ export const ProductForm: React.FC = () => {
         <Grid item md={12} xs={12}>
           <TextFieldCustom
             fullWidth
-            label="Mã sản phẩm"
+            label="Mã loại sản phẩm"
             name="id"
             placeholder="Ví dụ: CB123456"
             onTextChange={formik.setFieldValue}
@@ -140,69 +128,15 @@ export const ProductForm: React.FC = () => {
         <Grid item md={12} xs={12}>
           <TextFieldCustom
             fullWidth
-            label="Tên sản phẩm"
+            label="Tên loại sản phẩm"
             name="name"
-            placeholder="Ví dụ: Burger gà"
+            placeholder="Ví dụ: Burger"
             onTextChange={formik.setFieldValue}
             required
             value={formik.values.name}
             variant="outlined"
             error={!!formik.errors.name}
             helperText={formik.errors.name}
-          />
-        </Grid>
-
-        <Grid item md={12} xs={12}>
-          <TextFieldCustom
-            fullWidth
-            label="Giá sản phẩm"
-            name="priceSale"
-            placeholder="Ví dụ: 30000"
-            required
-            onTextChange={formik.setFieldValue}
-            value={formik.values.priceSale}
-            variant="outlined"
-            error={!!formik.errors.priceSale}
-            helperText={formik.errors.priceSale}
-          />
-        </Grid>
-
-        <Grid item md={12} xs={12}>
-          <Autocomplete
-            id="select-suplier"
-            options={supliers}
-            value={suplierSelected}
-            onChange={(e, value) => {
-              handleRoleChange(value);
-            }}
-            ListboxProps={{
-              style: {
-                maxHeight: "210px",
-              },
-            }}
-            disableCloseOnSelect
-            getOptionLabel={(option) => `(${option.id}) ${option.name}`}
-            renderOption={(props, option, { selected }) => (
-              <li {...props}>
-                <Checkbox
-                  icon={icon}
-                  checkedIcon={checkedIcon}
-                  style={{ marginRight: 8 }}
-                  checked={selected}
-                />
-                {`(${option.id}) ${option.name}`}
-              </li>
-            )}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label="Nhà cung cấp"
-                required
-                placeholder="Nhập mã nhà cung cấp, tên nhà cung cấp..."
-                error={!!formik.errors.suplierId}
-                helperText={formik.errors.suplierId}
-              />
-            )}
           />
         </Grid>
       </Grid>
@@ -217,7 +151,7 @@ export const ProductForm: React.FC = () => {
         <ButtonCustom
           disabled={!formik.dirty || formik.isSubmitting}
           type="submit"
-          title={formik.isSubmitting ? "Đang xử lý..." : !product ? "Thêm mới" : "Lưu"}
+          title={formik.isSubmitting ? "Đang xử lý..." : !category ? "Thêm mới" : "Lưu"}
         />
       </Box>
     </Box>

@@ -10,8 +10,6 @@ export type ProductFilter = BaseFilter & {
   suplierDisplay?: string;
   createdAtTo?: number;
   createdAtFrom?: number;
-  updatedAtTo?: number;
-  updatedAtFrom?: number;
 };
 
 export type ProductForm = {

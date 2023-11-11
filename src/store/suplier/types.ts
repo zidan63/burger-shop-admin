@@ -8,8 +8,6 @@ export type SuplierFilter = BaseFilter & {
   phone?: string[];
   createdAtTo?: number;
   createdAtFrom?: number;
-  updatedAtTo?: number;
-  updatedAtFrom?: number;
 };
 
 export type SuplierForm = {
