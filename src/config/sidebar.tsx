@@ -5,6 +5,8 @@ import SignalCellularAltIcon from "@mui/icons-material/SignalCellularAlt";
 import MapsHomeWorkIcon from "@mui/icons-material/MapsHomeWork";
 import TroubleshootIcon from "@mui/icons-material/Troubleshoot";
 import FastfoodIcon from "@mui/icons-material/Fastfood";
+import MenuBookIcon from "@mui/icons-material/MenuBook";
+import ColorLensIcon from "@mui/icons-material/ColorLens";
 
 export const SideBarRoute: SubNavItem[] = [
   {
@@ -21,6 +23,16 @@ export const SideBarRoute: SubNavItem[] = [
     href: "/role",
     icon: <RollerShades fontSize="small" />,
     title: "Quản lý vai trò",
+  },
+  {
+    href: "/color",
+    icon: <ColorLensIcon fontSize="small" />,
+    title: "Quản lý màu",
+  },
+  {
+    href: "/category",
+    icon: <MenuBookIcon fontSize="small" />,
+    title: "Quản lý loại sản phẩm",
   },
   {
     href: "/product",

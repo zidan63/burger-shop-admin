@@ -6,8 +6,6 @@ export type RoleFilter = BaseFilter & {
   name?: string;
   createdAtTo?: number;
   createdAtFrom?: number;
-  updatedAtTo?: number;
-  updatedAtFrom?: number;
 };
 
 export type RoleForm = {

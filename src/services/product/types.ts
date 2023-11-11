@@ -6,10 +6,6 @@ export type Product = BaseRecord & {
   color: string;
   suplierId: string;
   suplierDisplay: string;
-  createdAtTo: number;
-  createdAtFrom: number;
-  updatedAtTo: number;
-  updatedAtFrom: number;
 };
 
 export type CreateProduct = Omit<Product, keyof BaseRecord>;
