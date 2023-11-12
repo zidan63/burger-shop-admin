@@ -43,17 +43,7 @@ export const AccountPopover = (props) => {
         >
           Tài khoản
         </Typography>
-        <Box sx={{ mb: 0.5 }}>
-          <Typography
-            component="span"
-            sx={{ fontWeight: "500", fontSize: "14px", color: "#343a40" }}
-          >
-            Mã người dùng:
-          </Typography>
-          <Typography component="span" sx={{ fontWeight: "500", fontSize: "14px", ml: 1 }}>
-            {userCurrent?.code}
-          </Typography>
-        </Box>
+
         <Box sx={{ mb: 0.5 }}>
           <Typography
             component="span"
@@ -63,6 +53,17 @@ export const AccountPopover = (props) => {
           </Typography>
           <Typography component="span" sx={{ fontWeight: "500", fontSize: "14px", ml: 1 }}>
             {userCurrent?.fullName}
+          </Typography>
+        </Box>
+        <Box sx={{ mb: 0.5 }}>
+          <Typography
+            component="span"
+            sx={{ fontWeight: "500", fontSize: "14px", color: "#343a40" }}
+          >
+            Vai trò:
+          </Typography>
+          <Typography component="span" sx={{ fontWeight: "500", fontSize: "14px", ml: 1 }}>
+            {userCurrent.role.name}
           </Typography>
         </Box>
       </Box>

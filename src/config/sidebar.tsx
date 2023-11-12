@@ -5,10 +5,10 @@ import SignalCellularAltIcon from "@mui/icons-material/SignalCellularAlt";
 import MapsHomeWorkIcon from "@mui/icons-material/MapsHomeWork";
 import TroubleshootIcon from "@mui/icons-material/Troubleshoot";
 import FastfoodIcon from "@mui/icons-material/Fastfood";
-import MenuBookIcon from "@mui/icons-material/MenuBook";
 import ColorLensIcon from "@mui/icons-material/ColorLens";
+import CategoryIcon from "@mui/icons-material/Category";
 
-export const SideBarRoute: SubNavItem[] = [
+export const SideBarRouteAdmin: SubNavItem[] = [
   {
     href: "/",
     icon: <SignalCellularAltIcon />,
@@ -31,7 +31,7 @@ export const SideBarRoute: SubNavItem[] = [
   },
   {
     href: "/category",
-    icon: <MenuBookIcon fontSize="small" />,
+    icon: <CategoryIcon fontSize="small" />,
     title: "Quản lý loại sản phẩm",
   },
   {
@@ -48,5 +48,28 @@ export const SideBarRoute: SubNavItem[] = [
     href: "/statistic",
     icon: <TroubleshootIcon fontSize="small" />,
     title: "Báo cáo thống kê",
+  },
+];
+
+export const SideBarRouteSaler: SubNavItem[] = [
+  {
+    href: "/color",
+    icon: <ColorLensIcon fontSize="small" />,
+    title: "Quản lý màu",
+  },
+  {
+    href: "/category",
+    icon: <CategoryIcon fontSize="small" />,
+    title: "Quản lý loại sản phẩm",
+  },
+  {
+    href: "/product",
+    icon: <FastfoodIcon fontSize="small" />,
+    title: "Quản lý sản phẩm",
+  },
+  {
+    href: "/suplier",
+    icon: <MapsHomeWorkIcon fontSize="small" />,
+    title: "Quản lý nhà cung cấp",
   },
 ];

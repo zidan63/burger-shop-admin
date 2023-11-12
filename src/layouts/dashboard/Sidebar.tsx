@@ -7,8 +7,10 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import { SidebarBackground } from "./SidebarBackground";
 import { SidebarLogo } from "./SidebarLogo";
 import { ColorPallet } from "@config/theme";
-import { SideBarRoute } from "@config/sidebar";
+import { SideBarRouteAdmin, SideBarRouteSaler } from "@config/sidebar";
 import React from "react";
+import { AuthSelectors } from "@store/auth";
+import { useAppSelector } from "@store";
 
 type Props = {
   setOpenSidebar: (value: boolean) => void;
@@ -16,9 +18,13 @@ type Props = {
 };
 
 export const Sidebar: React.FC<Props> = ({ open, setOpenSidebar }) => {
+  const { userCurrent } = useAppSelector(AuthSelectors.getUserCurrent());
+
   const handleSignOut = async () => {
     await authService.logout();
   };
+
+  const slideBars = userCurrent?.role?.code === "ADMIN" ? SideBarRouteAdmin : SideBarRouteSaler;
 
   return (
     <Drawer
@@ -61,7 +67,7 @@ export const Sidebar: React.FC<Props> = ({ open, setOpenSidebar }) => {
             },
           }}
         >
-          {SideBarRoute.map((item, index) => (
+          {slideBars.map((item, index) => (
             <SubNav key={index} item={item} open={open} setOpenSidebar={setOpenSidebar} />
           ))}
         </Box>

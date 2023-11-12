@@ -8,14 +8,18 @@ import CollapseLeft from "@mui/icons-material/KeyboardDoubleArrowLeft";
 import CollapseRight from "@mui/icons-material/KeyboardDoubleArrowRightSharp";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { authService } from "@services/auth/AuthService";
-import { SideBarRoute } from "@config/sidebar";
+import { SideBarRouteAdmin, SideBarRouteSaler } from "@config/sidebar";
+import { AuthSelectors } from "@store/auth";
+import { useAppSelector } from "@store";
 
 export const SidebarResponsive = () => {
+  const { userCurrent } = useAppSelector(AuthSelectors.getUserCurrent());
   const [open, setOpen] = useState(false);
   const handleSignOut = async () => {
     await authService.logout();
   };
 
+  const slideBars = userCurrent?.role?.code === "ADMIN" ? SideBarRouteAdmin : SideBarRouteSaler;
   return (
     <Box sx={{ display: { md: "none" } }}>
       <Box sx={{ position: "relative" }}>
@@ -81,7 +85,7 @@ export const SidebarResponsive = () => {
               },
             }}
           >
-            {SideBarRoute.map((item, index) => (
+            {slideBars.map((item, index) => (
               <SubNav key={index} item={item} open={true} onClick={() => setOpen(false)} />
             ))}
           </Box>
