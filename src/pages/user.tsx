@@ -14,8 +14,8 @@ const Page = () => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(UserThunks.search({ isGetCount: true }));
-    dispatch(RoleThunks.getAll());
+    dispatch(UserThunks.search({}));
+    dispatch(RoleThunks.search({ roleFilter: { pageSize: 1000 } }));
   }, []);
 
   return (

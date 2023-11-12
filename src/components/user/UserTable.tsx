@@ -11,7 +11,6 @@ export const UserTable: React.FC = () => {
   const { users, totalUser } = useAppSelector(UserSelectors.getAll());
   const filter = useAppSelector(UserSelectors.getFilter());
   const table = useAppSelector(UserSelectors.getTable());
-  const { roles } = useAppSelector(RoleSelectors.getAll());
 
   const dispatch = useAppDispatch();
 
@@ -26,7 +25,7 @@ export const UserTable: React.FC = () => {
 
   const handleRemoveOneUser = async (user: User) => {
     const isAccept = await NotificationUtil.warning(
-      `Bạn có chắc chắn muốn xóa người dùng ${user.code} ${user.fullName} này ?`
+      `Bạn có chắc chắn muốn xóa người dùng ${user.id} ${user.fullName} này ?`
     );
     if (!isAccept) return;
     const result = await dispatch(UserThunks.delete(user.id));
@@ -64,56 +63,33 @@ export const UserTable: React.FC = () => {
         rowsData={users}
         columnsData={[
           {
-            field: "code",
-            headerName: "Mã người dùng",
-            type: "text",
-          },
-          {
             field: "fullName",
             headerName: "Họ và tên",
             type: "text",
-            sortComparator(_, __, a, b) {
-              return a.order.localeCompare(b.order);
-            },
-            minWidth: 200,
-            align: "left",
           },
           {
             field: "username",
             headerName: "Tên tài khoản",
             type: "text",
-            align: "left",
           },
 
           {
-            field: "roleIds",
+            field: "email",
+            headerName: "Email",
+            type: "text",
+          },
+
+          {
+            field: "role",
             headerName: "Vai trò",
             type: "text",
             minWidth: 150,
             valueGetter: (params) => {
               const user: User = params.row;
-              if (!roles.length) return user.roleDisplay;
-              const role = roles.filter((role) => user.roleIds.includes(role.id));
-              const roleDisplay = role.map((r) => r.name).join(", ");
-              return roleDisplay;
+              return user.role.name;
             },
             sortComparator(_, __, a, b) {
-              return a.level - b.level;
-            },
-          },
-          {
-            field: "phone",
-            headerName: "Số điện thoại",
-            type: "text",
-          },
-
-          {
-            field: "isActive",
-            headerName: "Trạng thái",
-            type: "boolean",
-            valueGetter: (params) => {
-              const user: User = params.row;
-              return user.isActive ? "Đang hoạt động" : "Dừng hoạt động";
+              return 1;
             },
           },
 

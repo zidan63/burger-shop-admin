@@ -45,7 +45,7 @@ export const ProductFilter: React.FC = () => {
       onReset={handleReset}
       searchItem={{
         label: "Tìm kiếm sản phẩm",
-        placeholder: "Nhập mã sản phẩm, tên sản phẩm, màu sản phẩm, giá sản phẩm, nhà cung cấp... ",
+        placeholder: "Nhập mã sản phẩm, tên sản phẩm, màu sản phẩm, giá sản phẩm,... ",
       }}
       searchItemAdvances={[
         {

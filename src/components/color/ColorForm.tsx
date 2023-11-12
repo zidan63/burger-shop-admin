@@ -1,81 +1,41 @@
-import { useState } from "react";
-import { Autocomplete, Box, Checkbox, Divider, Grid, TextField } from "@mui/material";
+import { Box, Divider, Grid } from "@mui/material";
 import { useFormik } from "formik";
-import { UserSelectors, UserThunks } from "@store/user";
 import { useAppDispatch, useAppSelector } from "@store";
-import { RoleSelectors } from "@store/role";
+import { PhotoshopPicker } from "react-color";
 
 import { TextFieldCustom } from "@components/_common/TextFieldCustom";
-import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
-import CheckBoxIcon from "@mui/icons-material/CheckBox";
-import React, { useMemo } from "react";
+import React, { useRef } from "react";
 import * as Yup from "yup";
 import { ButtonCustom } from "@components/_common/ButtonCustom";
 
 import { NotificationUtil } from "@utils/NotificationUtil";
-import { FormUtil } from "@utils/FormUtil";
 import { ColorSelectors, ColorThunks } from "@store/color";
-import { SuplierSelectors } from "@store/suplier";
-import { Suplier } from "@services/suplier";
 
-const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
-const checkedIcon = <CheckBoxIcon fontSize="small" />;
-
-const validationUpdateColor = Yup.object().shape({
+const validationColor = Yup.object().shape({
   code: Yup.string()
     .required("Mã màu bắt buộc nhập!")
-    .min(6, "Mã màu tối thiểu 6 kí tự!")
+    .min(3, "Mã màu tối thiểu 3 kí tự!")
     .max(15, "Mã màu tối đa 15 kí tự!"),
-  fullName: Yup.string()
-    .required("Họ và tên bắt buộc nhập!")
-    .min(6, "Họ và tên tối thiểu 6 kí tự!")
-    .max(100, "Họ và tên tối đa 100 kí tự!"),
-  phone: Yup.string()
-    .required("Số điện thoại bắt buộc nhập!")
-    .min(6, "Số điện thoại tối thiểu 6 kí tự!")
-    .max(15, "Số điện thoại tối đa 15 kí tự!"),
-  email: Yup.string().matches(
-    /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-    "Email chưa đúng định dạng! Phải có @, sau @ có tối thiểu 3 kí tự tiếp theo là có dấu chấm. Ví dụ: hoten@abc.com"
-  ),
-  username: Yup.string()
-    .required("Tài khoản bắt buộc nhập!")
-    .min(6, "Tài khoản tối thiểu 6 kí tự!")
-    .max(30, "Tài khoản tối đa 30 kí tự!")
-    .matches(/^\S*$/, "Tài khoản không được chứa khoảng trắng!"),
-  workUnitId: Yup.string().required("Làm việc tại tổ chức bắt buộc nhập!"),
-  roleIds: Yup.array().min(1, "Vai trò bắt buộc nhập!"),
-});
-
-const validationCreateColor = Yup.object().shape({
-  password: Yup.string()
-    .required("Mật khẩu bắt buộc nhập")
-    .min(6, "Mật khẩu tối thiểu 6 kí tự!")
-    .max(30, "Mật khẩu tối đa 30 kí tự!")
-    .matches(
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,30}$/,
-      "Mật khẩu phải chứa ít nhất một ký tự số, một ký tự hoa, một ký tự thường và một ký tự đặc biệt, không có khoảng trắng!"
-    ),
-  passwordRetype: Yup.string()
-    .required("Nhập lại mật khẩu bắt buộc nhập!")
-    .oneOf([Yup.ref("password")], "Mật khẩu không khớp!"),
+  name: Yup.string()
+    .required("Tên màu bắt buộc nhập!")
+    .min(6, "Tên màu tối thiểu 6 kí tự!")
+    .max(100, "Tên màu tối đa 100 kí tự!"),
 });
 
 export const ColorForm: React.FC = () => {
   const { color } = useAppSelector(ColorSelectors.getForm());
 
   const dispatch = useAppDispatch();
+  const inputColorRef = useRef<any>();
 
   const formik = useFormik({
     initialValues: color
       ? color
       : {
-          id: "",
+          code: "",
           name: "",
         },
-    validationSchema: color
-      ? validationUpdateColor
-      : validationUpdateColor.concat(validationCreateColor),
+    validationSchema: validationColor,
     validateOnChange: false,
     onSubmit: (values) => {
       if (color !== null) return handleUpdateColor(values);
@@ -93,8 +53,7 @@ export const ColorForm: React.FC = () => {
 
   const handleUpdateColor = async (values) => {
     if (!color) return;
-    const editedFields = FormUtil.getDirtyValues(values, formik.initialValues);
-    const result = await dispatch(ColorThunks.update({ id: color.id, color: editedFields }));
+    const result = await dispatch(ColorThunks.update(values));
     if (ColorThunks.update.rejected.match(result)) return formik.setSubmitting(false);
     NotificationUtil.success("Đã chỉnh sửa màu thành công");
   };
@@ -111,30 +70,50 @@ export const ColorForm: React.FC = () => {
         <Grid item md={12} xs={12}>
           <TextFieldCustom
             fullWidth
-            label="Mã màu"
-            name="code"
-            placeholder="Ví dụ: #CCC"
-            onTextChange={formik.setFieldValue}
-            required
-            value={formik.values.code}
-            variant="outlined"
-            error={!!formik.errors.code}
-            helperText={formik.errors.code}
-          />
-        </Grid>
-
-        <Grid item md={12} xs={12}>
-          <TextFieldCustom
-            fullWidth
             label="Tên màu"
             name="name"
-            placeholder="Ví dụ: Màu hường"
+            placeholder="Ví dụ: Màu đen"
             onTextChange={formik.setFieldValue}
             required
             value={formik.values.name}
             variant="outlined"
             error={!!formik.errors.name}
             helperText={formik.errors.name}
+          />
+        </Grid>
+        <Grid item md={12} xs={12}>
+          <TextFieldCustom
+            fullWidth
+            label="Mã màu"
+            name="code"
+            placeholder="Ví dụ: #000000"
+            inputRef={inputColorRef}
+            required
+            value={formik.values.code}
+            variant="outlined"
+            error={!!formik.errors.code}
+            helperText={formik.errors.code}
+            InputProps={{
+              readOnly: true,
+            }}
+          />
+        </Grid>
+        <Grid item md={12} xs={12}>
+          <PhotoshopPicker
+            styles={{
+              default: {
+                picker: {
+                  width: "100%",
+                  boxShadow: "unset",
+                },
+              },
+            }}
+            color={formik.values.code}
+            onChange={(color) => {
+              formik.setFieldValue("code", color.hex);
+              if (inputColorRef.current?.setInnerValue)
+                inputColorRef.current.setInnerValue(color.hex);
+            }}
           />
         </Grid>
       </Grid>

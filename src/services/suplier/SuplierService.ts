@@ -1,35 +1,23 @@
 import { HttpRequest } from "@utils/HttpRequest";
-import { CreateSuplier, UpdateSuplier, Suplier } from "./types";
-import { ProductFilter } from "@store/product/types";
-import { ResultPaginationBookmark } from "@types";
+import { CreateSuplier, Suplier } from "./types";
 import { SuplierFilter } from "@store/suplier/types";
+import { SearchResult } from "@types";
 
 class SuplierService {
   async search(suplierFilter?: SuplierFilter) {
-    return HttpRequest.get<Suplier[]>(`/supliers/search`, suplierFilter);
+    return HttpRequest.get<SearchResult<Suplier>>(`/supliers`, suplierFilter);
   }
 
-  async searchBookmark(suplierFilter?: SuplierFilter) {
-    return HttpRequest.get<ResultPaginationBookmark<Suplier>>(
-      `/supliers/search-bookmark`,
-      suplierFilter
-    );
+  async create(suplier: CreateSuplier) {
+    return HttpRequest.post<Suplier>("/supliers", suplier);
   }
 
-  async count(suplierFilter?: SuplierFilter) {
-    return HttpRequest.get<{ count: number }>(`/supliers/count`, suplierFilter);
-  }
-
-  async create(product: CreateSuplier) {
-    return HttpRequest.post<Suplier>("/supliers", product);
-  }
-
-  async update(id: string, product: UpdateSuplier) {
-    return HttpRequest.patch<Suplier>(`/supliers/${id}`, product);
+  async update(suplier: Suplier) {
+    return HttpRequest.put<Suplier>(`/supliers`, suplier);
   }
 
   async delete(id: string) {
-    return HttpRequest.delete(`/supliers/${id}`);
+    return HttpRequest.delete(`/supliers?id=${id}`);
   }
 }
 

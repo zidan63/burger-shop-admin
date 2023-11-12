@@ -20,7 +20,7 @@ export const ColorModal = () => {
     <DialogCustom
       open={open}
       onClose={handleClose}
-      title={!color ? "Thêm mới loại sản phẩm" : "Chỉnh sửa thông tin loại sản phẩm"}
+      title={!color ? "Thêm mới màu" : "Chỉnh sửa thông tin màu"}
       subTitle={"Nhập thông tin vào các ô tương ứng"}
       style={{
         dialog: {

@@ -1,6 +1,6 @@
 import React from "react";
 import { useAppDispatch, useAppSelector } from "@store";
-import { FilterAdvance, FilterAdvanceSearchItemOptions } from "@components/_common/FilterAdvance";
+import { FilterAdvance } from "@components/_common/FilterAdvance";
 import { SearchType } from "@types";
 import { SuplierSelectors, SuplierThunks } from "@store/suplier";
 
@@ -50,10 +50,10 @@ export const SuplierFilter: React.FC = () => {
       }}
       searchItemAdvances={[
         {
-          field: "id",
+          field: "code",
           type: "text",
           label: "Mã nhà cung cấp",
-          placeholder: "Ví dụ: 0001",
+          placeholder: "Ví dụ: NCC001",
         },
         {
           field: "name",

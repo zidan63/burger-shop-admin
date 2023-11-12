@@ -56,7 +56,7 @@ export const RoleFilter: React.FC = () => {
           field: "code",
           type: "text",
           label: "Mã vai trò",
-          placeholder: "Ví dụ: NV000001",
+          placeholder: "Ví dụ: ADMIN",
         },
         {
           field: "createdAtFrom",
@@ -72,7 +72,7 @@ export const RoleFilter: React.FC = () => {
           field: "name",
           type: "text",
           label: "Tên vai trò",
-          placeholder: "Ví dụ: Phó đội trưởng",
+          placeholder: "Ví dụ: Quản trị viên",
         },
         {
           field: "updatedAtFrom",

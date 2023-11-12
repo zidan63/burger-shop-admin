@@ -54,16 +54,9 @@ export const UserFilter: React.FC = () => {
       onReset={handleReset}
       searchItem={{
         label: "Tìm kiếm người dùng",
-        placeholder:
-          "Nhập mã người dùng, tên người dùng, tên vai trò, tên đơn vị, số điện thoại, email,... ",
+        placeholder: "Nhập  tên người dùng, tài khoản, email... ",
       }}
       searchItemAdvances={[
-        {
-          field: "code",
-          type: "text",
-          label: "Mã người dùng",
-          placeholder: "Ví dụ: NV000001",
-        },
         {
           field: "fullName",
           type: "text",
@@ -78,10 +71,10 @@ export const UserFilter: React.FC = () => {
         },
 
         {
-          field: "phone",
+          field: "email",
           type: "text",
-          label: "Số điện thoại",
-          placeholder: "Ví dụ: (084) 987 654 321",
+          label: "Email",
+          placeholder: "Ví dụ: phuthinh@gmail.com",
         },
         {
           field: "createdAtFrom",
@@ -94,10 +87,10 @@ export const UserFilter: React.FC = () => {
           label: "Ngày tạo đến ngày",
         },
         {
-          field: "roleIds",
+          field: "roleId",
           type: "options",
           label: "Vai trò",
-          placeholder: "Ví dụ: (TP) Trưởng phòng",
+          placeholder: "Ví dụ: (ADMIN) Quản trị viên",
           options: {
             options: roles,
             getOptionLabel: (option) => `(${option.code}) ${option.name}`,

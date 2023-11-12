@@ -12,7 +12,6 @@ export const CategoryFilter: React.FC = () => {
   const handleSearch = (value: string) => {
     dispatch(
       CategoryThunks.search({
-        isGetCount: true,
         categoryFilter: {
           page: 1,
           pageSize: filter.pageSize,
@@ -24,7 +23,6 @@ export const CategoryFilter: React.FC = () => {
   const handleSearchAdvance = (values) => {
     dispatch(
       CategoryThunks.search({
-        isGetCount: true,
         categoryFilter: {
           ...values,
           searchType: SearchType.ADVANCED,
@@ -35,7 +33,7 @@ export const CategoryFilter: React.FC = () => {
   };
 
   function handleReset() {
-    dispatch(CategoryThunks.search({ isGetCount: true }));
+    dispatch(CategoryThunks.search({}));
   }
 
   return (
@@ -69,6 +67,16 @@ export const CategoryFilter: React.FC = () => {
           field: "createdAtTo",
           type: "date",
           label: "Ngày tạo đến ngày",
+        },
+        {
+          field: "updatedAtFrom",
+          type: "date",
+          label: "Ngày chỉnh sửa từ ngày",
+        },
+        {
+          field: "updatedAtTo",
+          type: "date",
+          label: "Ngày chỉnh sửa đến ngày",
         },
       ]}
     />

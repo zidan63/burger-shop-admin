@@ -21,9 +21,9 @@ export const middleware = async (req: NextRequest) => {
 
     const { accessToken } = session;
 
-    // if (!accessToken) {
-    //   return NextResponse.redirect(new URL("/login", req.url));
-    // }
+    if (!accessToken) {
+      return NextResponse.redirect(new URL("/login", req.url));
+    }
   }
 
   return res;
@@ -38,6 +38,6 @@ export const config = {
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
      */
-    "/((?!api|_next/static|_next/image|favicon.ico).*)",
+    "/((?!api|_next/static|static|images|_next/images|favicon.ico).*)",
   ],
 };

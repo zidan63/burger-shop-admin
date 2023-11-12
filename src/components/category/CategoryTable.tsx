@@ -64,7 +64,7 @@ export const CategoryTable: React.FC = () => {
         rowsData={categories}
         columnsData={[
           {
-            field: "id",
+            field: "code",
             headerName: "Mã loại sản phẩm",
             type: "text",
           },
@@ -76,6 +76,11 @@ export const CategoryTable: React.FC = () => {
           {
             field: "createdAt",
             headerName: "Ngày tạo",
+            type: "date",
+          },
+          {
+            field: "updatedAt",
+            headerName: "Ngày chỉnh sửa",
             type: "date",
           },
         ]}

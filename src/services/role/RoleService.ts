@@ -1,38 +1,27 @@
 import { RoleFilter } from "@store/role/types";
 import { HttpRequest } from "@utils/HttpRequest";
 import { CreateRole, Role, UpdateRole } from "./types";
+import { SearchResult } from "@types";
 
 class RoleService {
-  async getAll() {
-    return HttpRequest.get<Role[]>("/roles");
-  }
-
   async search(roleFilter?: RoleFilter) {
-    return HttpRequest.get<Role[]>("/roles/search", roleFilter);
-  }
-
-  async count(roleFilter?: RoleFilter) {
-    return HttpRequest.get<{ count: number }>("/roles/count", roleFilter);
+    return HttpRequest.get<SearchResult<Role>>("/roles", roleFilter);
   }
 
   async create(createRole: CreateRole) {
     return HttpRequest.post("/roles", createRole);
   }
 
-  async update(id: string, updateRole: UpdateRole) {
-    return HttpRequest.patch(`/roles/${id}`, updateRole);
-  }
-
-  async updateStatusActive(id: string, isActive: boolean) {
-    return HttpRequest.patch<Role>(`/roles/${id}/status`, { isActive });
+  async update(updateRole: Role) {
+    return HttpRequest.put(`/roles`, updateRole);
   }
 
   async delete(id: string) {
-    return HttpRequest.delete(`/roles/${id}`);
+    return HttpRequest.delete(`/roles?id=${id}`);
   }
 
   async getAllPermision() {
-    return HttpRequest.get("/permission");
+    return HttpRequest.get("/permission?pageSize=1000");
   }
 }
 

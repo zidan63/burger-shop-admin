@@ -1,34 +1,23 @@
 import { HttpRequest } from "@utils/HttpRequest";
-import { CreateCategory, UpdateCategory, Category } from "./types";
-import { ResultPaginationBookmark } from "@types";
+import { CreateCategory, Category } from "./types";
 import { CategoryFilter } from "@store/category/types";
+import { SearchResult } from "@types";
 
 class CategoryService {
   async search(categoryFilter?: CategoryFilter) {
-    return HttpRequest.get<Category[]>(`/categories/search`, categoryFilter);
-  }
-
-  async searchBookmark(categoryFilter?: CategoryFilter) {
-    return HttpRequest.get<ResultPaginationBookmark<Category>>(
-      `/categories/search-bookmark`,
-      categoryFilter
-    );
-  }
-
-  async count(categoryFilter?: CategoryFilter) {
-    return HttpRequest.get<{ count: number }>(`/categories/count`, categoryFilter);
+    return HttpRequest.get<SearchResult<Category>>(`/categories`, categoryFilter);
   }
 
   async create(category: CreateCategory) {
     return HttpRequest.post<Category>("/categories", category);
   }
 
-  async update(id: string, category: UpdateCategory) {
-    return HttpRequest.patch<Category>(`/categories/${id}`, category);
+  async update(category: Category) {
+    return HttpRequest.put<Category>(`/categories`, category);
   }
 
   async delete(id: string) {
-    return HttpRequest.delete(`/categories/${id}`);
+    return HttpRequest.delete(`/categories?id=${id}`);
   }
 }
 

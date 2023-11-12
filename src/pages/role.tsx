@@ -15,7 +15,7 @@ const Page = () => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(RoleThunks.search({ isGetCount: true }));
+    dispatch(RoleThunks.search({}));
     dispatch(RoleThunks.getAllPermission());
   }, []);
 

@@ -1,4 +1,4 @@
-export const formatDate = (date: number) => {
+export const formatDate = (date: any) => {
   if (!date) return "Chưa có";
   const dateTime = new Date(date);
   const options: Intl.DateTimeFormatOptions = {
@@ -12,4 +12,15 @@ export const formatDate = (date: number) => {
   };
 
   return dateTime.toLocaleString("en-GB", options).replace(",", "");
+};
+
+export const formatMoney = (amount: number) => {
+  // Sử dụng Intl.NumberFormat để định dạng số
+  const formatter = new Intl.NumberFormat("vi-VN", {
+    style: "currency",
+    currency: "VND",
+  });
+
+  // Định dạng số và trả về chuỗi đã được định dạng
+  return formatter.format(amount);
 };

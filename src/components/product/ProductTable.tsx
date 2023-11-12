@@ -7,6 +7,7 @@ import { NotificationUtil } from "@utils/NotificationUtil";
 import { RoleSelectors } from "@store/role";
 import { ProductActions, ProductSelectors, ProductThunks } from "@store/product";
 import { Product } from "@services/product";
+import { formatMoney } from "@utils/DateFormat";
 
 export const ProductTable: React.FC = () => {
   const { products, totalProduct } = useAppSelector(ProductSelectors.getAll());
@@ -64,32 +65,55 @@ export const ProductTable: React.FC = () => {
         rowsData={products}
         columnsData={[
           {
-            field: "code",
+            field: "id",
             headerName: "Mã sản phẩm",
-            type: "text",
+            type: "number",
           },
           {
             field: "name",
             headerName: "Tên sản phẩm",
             type: "text",
             minWidth: 200,
-            align: "left",
           },
           {
-            field: "color",
-            headerName: "Màu sản phẩm",
-            type: "text",
-            align: "left",
+            field: "priceRecipt",
+            headerName: "Giá nhập",
+            type: "number",
+            valueGetter: (param) => formatMoney(param.row.priceRecipt),
+            minWidth: 200,
           },
           {
             field: "priceSale",
-            headerName: "Giá sản phẩm",
-            type: "text",
+            headerName: "Giá bán",
+            type: "number",
+            valueGetter: (param) => formatMoney(param.row.priceSale),
+            minWidth: 200,
           },
           {
-            field: "suplierId",
+            field: "stock",
+            headerName: "Số lượng",
+            type: "number",
+            minWidth: 200,
+          },
+          {
+            field: "category",
+            headerName: "Loại",
+            type: "object",
+            valueGetter: (params) => params.row.category.name,
+          },
+          {
+            field: "suplier",
             headerName: "Nhà cung cấp",
-            type: "text",
+            type: "object",
+            valueGetter: (params) => params.row.suplier.name,
+            minWidth: 200,
+          },
+          {
+            field: "user",
+            headerName: "Người bán",
+            type: "object",
+            valueGetter: (params) => params.row.user.fullName,
+            minWidth: 200,
           },
           {
             field: "createdAt",

@@ -49,25 +49,15 @@ const roleSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(RoleThunks.getAll.pending, (state) => {
-        state.table.loading = true;
-      })
-      .addCase(RoleThunks.getAll.fulfilled, (state, action) => {
-        state.roles = action.payload;
-        state.table.loading = false;
-      })
-      .addCase(RoleThunks.getAll.rejected, (state) => {
-        state.table.loading = false;
-      });
-
-    builder
       .addCase(RoleThunks.search.pending, (state, action) => {
         state.table.loading = true;
         if (!action.meta.arg.roleFilter) state.filter = initialState.filter;
         else state.filter = { ...action.meta.arg.roleFilter };
       })
       .addCase(RoleThunks.search.fulfilled, (state, action) => {
-        state.roles = action.payload;
+        state.roles = action.payload.records;
+        state.totalRole = action.payload.totalRecord;
+        state.filter.page = action.payload.pageCurrent;
         state.table.loading = false;
       })
       .addCase(RoleThunks.search.rejected, (state) => {

@@ -1,12 +1,11 @@
 import { Box } from "@mui/material";
-import { User } from "@services/user";
 import { useAppDispatch, useAppSelector } from "@store";
 import { DataGridCustom } from "@components/_common/DataGridCustom";
 import { Delete, Edit } from "@mui/icons-material";
 import { NotificationUtil } from "@utils/NotificationUtil";
-import { RoleSelectors } from "@store/role";
 import { ColorActions, ColorSelectors, ColorThunks } from "@store/color";
 import { Color } from "@services/color";
+import { Stack } from "@mui/system";
 
 export const ColorTable: React.FC = () => {
   const { colors, totalColor } = useAppSelector(ColorSelectors.getAll());
@@ -25,13 +24,11 @@ export const ColorTable: React.FC = () => {
   };
 
   const handleRemoveOneColor = async (color: Color) => {
-    const isAccept = await NotificationUtil.warning(
-      `Bạn có chắc chắn muốn xóa loại sản phẩm này ?`
-    );
+    const isAccept = await NotificationUtil.warning(`Bạn có chắc chắn muốn xóa màu này ?`);
     if (!isAccept) return;
     const result = await dispatch(ColorThunks.delete(color.id));
     if (ColorThunks.delete.rejected.match(result)) return;
-    NotificationUtil.success("Đã xóa loại sản phẩm thành công");
+    NotificationUtil.success("Đã xóa màu thành công");
   };
 
   const handlePageChange = async (page) => {
@@ -67,6 +64,23 @@ export const ColorTable: React.FC = () => {
             field: "code",
             headerName: "Mã màu",
             type: "text",
+            renderCell(params) {
+              const code = params.row.code;
+              return (
+                <Stack direction={"row"}>
+                  <Box
+                    sx={{
+                      backgroundColor: code,
+                      width: 20,
+                      height: 20,
+                      borderRadius: 20,
+                      mr: 1,
+                    }}
+                  ></Box>
+                  {code}
+                </Stack>
+              );
+            },
           },
           {
             field: "name",
@@ -76,6 +90,11 @@ export const ColorTable: React.FC = () => {
           {
             field: "createdAt",
             headerName: "Ngày tạo",
+            type: "date",
+          },
+          {
+            field: "updatedAt",
+            headerName: "Ngày chỉnh sửa",
             type: "date",
           },
         ]}

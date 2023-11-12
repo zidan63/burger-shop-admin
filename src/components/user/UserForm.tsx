@@ -19,29 +19,22 @@ const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
 const validationUpdateUser = Yup.object().shape({
-  code: Yup.string()
-    .required("Mã người dùng bắt buộc nhập!")
-    .min(6, "Mã người dùng tối thiểu 6 kí tự!")
-    .max(15, "Mã người dùng tối đa 15 kí tự!"),
   fullName: Yup.string()
     .required("Họ và tên bắt buộc nhập!")
     .min(6, "Họ và tên tối thiểu 6 kí tự!")
     .max(100, "Họ và tên tối đa 100 kí tự!"),
-  phone: Yup.string()
-    .required("Số điện thoại bắt buộc nhập!")
-    .min(6, "Số điện thoại tối thiểu 6 kí tự!")
-    .max(15, "Số điện thoại tối đa 15 kí tự!"),
-  email: Yup.string().matches(
-    /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-    "Email chưa đúng định dạng! Phải có @, sau @ có tối thiểu 3 kí tự tiếp theo là có dấu chấm. Ví dụ: hoten@abc.com"
-  ),
+  email: Yup.string()
+    .required("Email bắt buộc nhập!")
+    .matches(
+      /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+      "Email chưa đúng định dạng! Phải có @, sau @ có tối thiểu 3 kí tự tiếp theo là có dấu chấm. Ví dụ: hoten@abc.com"
+    ),
+  role: Yup.object().required("Bắt buộc chọn vai trò!"),
   username: Yup.string()
     .required("Tài khoản bắt buộc nhập!")
     .min(6, "Tài khoản tối thiểu 6 kí tự!")
     .max(30, "Tài khoản tối đa 30 kí tự!")
     .matches(/^\S*$/, "Tài khoản không được chứa khoảng trắng!"),
-  workUnitId: Yup.string().required("Làm việc tại tổ chức bắt buộc nhập!"),
-  roleIds: Yup.array().min(1, "Vai trò bắt buộc nhập!"),
 });
 
 const validationCreateUser = Yup.object().shape({
@@ -68,17 +61,13 @@ export const UserForm: React.FC = () => {
     initialValues: user
       ? { ...user, password: "", passwordRetype: "" }
       : {
-          code: "",
           fullName: "",
           phone: "",
           email: "",
           username: "",
           password: "",
           passwordRetype: "",
-          workUnitId: "",
-          workUnitDisplay: "",
-          roleIds: [] as string[],
-          roleDisplay: "",
+          role: null,
         },
     validationSchema: user
       ? validationUpdateUser
@@ -91,8 +80,8 @@ export const UserForm: React.FC = () => {
   });
 
   const roleSelected = useMemo(() => {
-    return roles.filter((r) => formik.values.roleIds.includes(r.id));
-  }, [roles, formik.values.roleIds]);
+    return roles.find((r) => formik.values.role?.id === r.id);
+  }, [roles, formik.values.role]);
 
   const handleCreateUser = async (values) => {
     const result = await dispatch(UserThunks.create(values));
@@ -104,18 +93,13 @@ export const UserForm: React.FC = () => {
 
   const handleUpdateUser = async (values) => {
     if (!user) return;
-    const editedFields = FormUtil.getDirtyValues(values, formik.initialValues);
-    const result = await dispatch(UserThunks.update({ id: user.id, user: editedFields }));
+    const result = await dispatch(UserThunks.update(values));
     if (UserThunks.update.rejected.match(result)) return formik.setSubmitting(false);
     NotificationUtil.success("Đã chỉnh sửa người dùng thành công");
   };
 
-  const handleRoleChange = (value: Role[]) => {
-    formik.setFieldValue(
-      "roleIds",
-      value.map((r) => r.id)
-    );
-    formik.setFieldValue("roleDisplay", value.map((r) => r.name).join(", "));
+  const handleRoleChange = (value: Role | null) => {
+    formik.setFieldValue("role", value);
   };
 
   return (
@@ -127,21 +111,6 @@ export const UserForm: React.FC = () => {
       sx={{ maxHeight: "70vh" }}
     >
       <Grid container spacing={2}>
-        <Grid item md={12} xs={12}>
-          <TextFieldCustom
-            fullWidth
-            label="Mã người dùng"
-            name="code"
-            placeholder="Ví dụ: CB123456"
-            onTextChange={formik.setFieldValue}
-            required
-            value={formik.values.code}
-            variant="outlined"
-            error={!!formik.errors.code}
-            helperText={formik.errors.code}
-          />
-        </Grid>
-
         <Grid item md={12} xs={12}>
           <TextFieldCustom
             fullWidth
@@ -157,22 +126,7 @@ export const UserForm: React.FC = () => {
           />
         </Grid>
 
-        <Grid item md={6} xs={12}>
-          <TextFieldCustom
-            fullWidth
-            label="Số điện thoại"
-            name="phone"
-            placeholder="Ví dụ: (084) 987 654 321"
-            required
-            onTextChange={formik.setFieldValue}
-            value={formik.values.phone}
-            variant="outlined"
-            error={!!formik.errors.phone}
-            helperText={formik.errors.phone}
-          />
-        </Grid>
-
-        <Grid item md={6} xs={12}>
+        <Grid item md={12} xs={12}>
           <TextFieldCustom
             fullWidth
             label="Email"
@@ -180,6 +134,7 @@ export const UserForm: React.FC = () => {
             placeholder="Ví dụ: nguyenvana@gmail.com"
             onTextChange={formik.setFieldValue}
             type="email"
+            required
             value={formik.values.email}
             variant="outlined"
             error={!!formik.errors.email}
@@ -189,12 +144,12 @@ export const UserForm: React.FC = () => {
 
         <Grid item md={12} xs={12}>
           <Autocomplete
-            multiple
-            id="muti-select-role"
+            // multiple
+            id="select-role"
             options={roles}
             value={roleSelected}
-            onChange={(e, values) => {
-              handleRoleChange(values);
+            onChange={(e, value) => {
+              handleRoleChange(value);
             }}
             ListboxProps={{
               style: {
@@ -220,8 +175,8 @@ export const UserForm: React.FC = () => {
                 label="Vai trò"
                 required
                 placeholder="Nhập mã vai trò, tên vai trò..."
-                error={!!formik.errors.roleIds}
-                helperText={formik.errors.roleIds}
+                error={!!formik.errors.role}
+                helperText={formik.errors.role}
               />
             )}
           />
@@ -281,7 +236,7 @@ export const UserForm: React.FC = () => {
         sx={{
           display: "flex",
           justifyContent: "flex-end",
-          py: 2,
+          pt: 2,
         }}
       >
         <ButtonCustom

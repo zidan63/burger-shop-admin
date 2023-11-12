@@ -1,5 +1,6 @@
 import axios, { AxiosRequestConfig } from "axios";
 import { NotificationUtil } from "./NotificationUtil";
+import queryString from "query-string";
 
 const instance = axios.create({
   baseURL: "/api",
@@ -7,6 +8,7 @@ const instance = axios.create({
     "Content-Type": "application/json",
     charset: "utf-8",
   },
+  paramsSerializer: (params) => queryString.stringify(params),
 });
 
 instance.interceptors.response.use(
@@ -22,7 +24,9 @@ instance.interceptors.response.use(
         break;
       }
       default: {
-        message = error?.response?.data?.message || "Máy chủ lỗi!";
+        if (error?.response?.data?.message)
+          message = error?.response?.data?.message || "Máy chủ lỗi!";
+        else if (error?.response?.data?.messages) message = error?.response?.data?.messages;
         break;
       }
     }

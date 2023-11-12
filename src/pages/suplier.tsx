@@ -11,13 +11,14 @@ import { useAppDispatch } from "@store";
 import { SuplierToolbar } from "@components/suplier/SuplierToolbar";
 import { SuplierFilter } from "@components/suplier/SuplierFilter";
 import { SuplierTable } from "@components/suplier/SuplierTable";
-import { SuplierModal } from "@components/suplier/ProductModal";
+import { SuplierModal } from "@components/suplier/SuplierModal";
+import { SuplierThunks } from "@store/suplier";
 
 const Page = () => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    // dispatch(SuplierThunks.search({ isGetCount: true }));
+    dispatch(SuplierThunks.search({}));
   }, []);
 
   return (

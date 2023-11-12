@@ -12,7 +12,6 @@ export const ColorFilter: React.FC = () => {
   const handleSearch = (value: string) => {
     dispatch(
       ColorThunks.search({
-        isGetCount: true,
         colorFilter: {
           page: 1,
           pageSize: filter.pageSize,
@@ -24,7 +23,6 @@ export const ColorFilter: React.FC = () => {
   const handleSearchAdvance = (values) => {
     dispatch(
       ColorThunks.search({
-        isGetCount: true,
         colorFilter: {
           ...values,
           searchType: SearchType.ADVANCED,
@@ -35,7 +33,7 @@ export const ColorFilter: React.FC = () => {
   };
 
   function handleReset() {
-    dispatch(ColorThunks.search({ isGetCount: true }));
+    dispatch(ColorThunks.search({}));
   }
 
   return (
@@ -52,13 +50,13 @@ export const ColorFilter: React.FC = () => {
           field: "code",
           type: "text",
           label: "Mã màu",
-          placeholder: "Ví dụ: #CCC",
+          placeholder: "Ví dụ: #00000",
         },
         {
           field: "name",
           type: "text",
           label: "Tên màu",
-          placeholder: "Ví dụ: Burger gà",
+          placeholder: "Ví dụ: Màu xám",
         },
         {
           field: "createdAtFrom",
@@ -69,6 +67,16 @@ export const ColorFilter: React.FC = () => {
           field: "createdAtTo",
           type: "date",
           label: "Ngày tạo đến ngày",
+        },
+        {
+          field: "updatedAtFrom",
+          type: "date",
+          label: "Ngày chỉnh sửa từ ngày",
+        },
+        {
+          field: "updatedAtTo",
+          type: "date",
+          label: "Ngày chỉnh sửa đến ngày",
         },
       ]}
     />

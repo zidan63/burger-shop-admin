@@ -1,7 +1,7 @@
 import { BaseRecord } from "@types";
 
 export type Suplier = BaseRecord & {
-  id: string;
+  code: string;
   name: string;
   address: string;
   phone: string;

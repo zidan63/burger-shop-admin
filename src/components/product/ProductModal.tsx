@@ -25,10 +25,10 @@ export const ProductModal = () => {
       subTitle={"Nhập thông tin vào các ô tương ứng"}
       style={{
         dialog: {
-          "& .MuiDialog-paperScrollBody": { maxWidth: "600px" },
+          "& .MuiDialog-paperScrollBody": { maxWidth: "800px" },
         },
         dialogContent: {
-          width: { lg: "600px" },
+          width: { lg: "800px" },
         },
       }}
     >

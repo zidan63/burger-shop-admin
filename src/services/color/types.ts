@@ -1,7 +1,6 @@
 import { BaseRecord } from "@types";
 
 export type Color = BaseRecord & {
-  id: string;
   code: string;
   name: string;
 };

@@ -9,7 +9,6 @@ export type ReactFCP<T = any> = React.FC<React.PropsWithChildren<T>>;
 
 export type BaseRecord = {
   id: string;
-  docType: string;
   createdAt: number;
   updatedAt: number;
   deletedAt: any;
@@ -22,14 +21,12 @@ export enum SearchType {
 
 export type BaseFilter = {
   searchType?: SearchType;
-
   page?: number;
   pageSize?: number;
-  bookmark?: string;
 };
 
-export type ResultPaginationBookmark<T> = {
+export type SearchResult<T> = {
   records: T[];
-  fetchedRecordsCount: number;
-  bookmark: string;
+  totalRecord: number;
+  pageCurrent: number;
 };

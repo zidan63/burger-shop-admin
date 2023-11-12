@@ -94,8 +94,7 @@ export function DataGridCustom<T>({
     const columnPerField: GridColDef[] = columnsData.map((column: ColumnProps) => {
       switch (column.type) {
         case "date": {
-          column.valueGetter = (params) =>
-            typeof params.value === "number" ? formatDate(params.value) : "";
+          column.valueGetter = (params) => formatDate(params.value);
         }
       }
 

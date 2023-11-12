@@ -73,25 +73,6 @@ export const RoleTable = () => {
             headerName: "Tên vai trò",
             type: "text",
           },
-          {
-            field: "level",
-            headerName: "Độ ưu tiên",
-            type: "number",
-          },
-          {
-            field: "maxAmountInOrg",
-            headerName: "SLTĐ/TC",
-            type: "number",
-          },
-          {
-            field: "isActive",
-            headerName: "Trạng thái",
-            type: "boolean",
-            valueGetter: (params) => {
-              const role: Role = params.row;
-              return role.isActive ? "Đang hoạt động" : "Dừng hoạt động";
-            },
-          },
 
           {
             field: "createdAt",

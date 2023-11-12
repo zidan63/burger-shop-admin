@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Autocomplete, Box, Checkbox, Divider, Grid, TextField } from "@mui/material";
+import { Autocomplete, Box, Checkbox, Chip, Divider, Grid, TextField } from "@mui/material";
 import { useFormik } from "formik";
 import { UserSelectors, UserThunks } from "@store/user";
 import { useAppDispatch, useAppSelector } from "@store";
@@ -16,54 +16,39 @@ import { NotificationUtil } from "@utils/NotificationUtil";
 import { FormUtil } from "@utils/FormUtil";
 import { ProductSelectors, ProductThunks } from "@store/product";
 import { SuplierSelectors } from "@store/suplier";
-import { Suplier } from "@services/suplier";
+import { CreateSuplier, Suplier } from "@services/suplier";
+import { Color } from "@services/color";
+import { CategorySelectors } from "@store/category";
+import { Category } from "@services/category";
+import { ColorSelectors } from "@store/color";
+import { Stack } from "@mui/system";
 
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
-const validationUpdateProduct = Yup.object().shape({
-  code: Yup.string()
-    .required("Mã sản phẩm bắt buộc nhập!")
-    .min(6, "Mã sản phẩm tối thiểu 6 kí tự!")
-    .max(15, "Mã sản phẩm tối đa 15 kí tự!"),
-  fullName: Yup.string()
-    .required("Họ và tên bắt buộc nhập!")
-    .min(6, "Họ và tên tối thiểu 6 kí tự!")
-    .max(100, "Họ và tên tối đa 100 kí tự!"),
-  phone: Yup.string()
-    .required("Số điện thoại bắt buộc nhập!")
-    .min(6, "Số điện thoại tối thiểu 6 kí tự!")
-    .max(15, "Số điện thoại tối đa 15 kí tự!"),
-  email: Yup.string().matches(
-    /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-    "Email chưa đúng định dạng! Phải có @, sau @ có tối thiểu 3 kí tự tiếp theo là có dấu chấm. Ví dụ: hoten@abc.com"
-  ),
-  username: Yup.string()
-    .required("Tài khoản bắt buộc nhập!")
-    .min(6, "Tài khoản tối thiểu 6 kí tự!")
-    .max(30, "Tài khoản tối đa 30 kí tự!")
-    .matches(/^\S*$/, "Tài khoản không được chứa khoảng trắng!"),
-  workUnitId: Yup.string().required("Làm việc tại tổ chức bắt buộc nhập!"),
-  roleIds: Yup.array().min(1, "Vai trò bắt buộc nhập!"),
-});
-
-const validationCreateProduct = Yup.object().shape({
-  password: Yup.string()
-    .required("Mật khẩu bắt buộc nhập")
-    .min(6, "Mật khẩu tối thiểu 6 kí tự!")
-    .max(30, "Mật khẩu tối đa 30 kí tự!")
-    .matches(
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,30}$/,
-      "Mật khẩu phải chứa ít nhất một ký tự số, một ký tự hoa, một ký tự thường và một ký tự đặc biệt, không có khoảng trắng!"
-    ),
-  passwordRetype: Yup.string()
-    .required("Nhập lại mật khẩu bắt buộc nhập!")
-    .oneOf([Yup.ref("password")], "Mật khẩu không khớp!"),
+const validationSchema = Yup.object().shape({
+  name: Yup.string()
+    .required("Tên sản phẩm bắt buộc nhập!")
+    .min(6, "Tên sản phẩm tối thiểu 6 kí tự!")
+    .max(200, "Tên sản phẩm tối đa 200 kí tự!"),
+  priceRecipt: Yup.number()
+    .required("Giá nhập bắt buộc nhập!")
+    .typeError("Giá nhập phải là số!")
+    .min(1000, "Giá nhập tối thiểu 1.000 VNĐ"),
+  priceSale: Yup.number()
+    .required("Giá bán bắt buộc nhập!")
+    .typeError("Giá bán phải là số!")
+    .min(1000, "Giá bán tối thiểu 1.000 VNĐ"),
+  stock: Yup.number().required("Số lượng bắt buộc nhập!").typeError("Số lượng phải là số!"),
+  suplier: Yup.object().required("Nhà cung cấp bắt buộc chọn!"),
+  category: Yup.object().required("Loại sản phẩm bắt buộc chọn!"),
 });
 
 export const ProductForm: React.FC = () => {
   const { product } = useAppSelector(ProductSelectors.getForm());
+  const { categories } = useAppSelector(CategorySelectors.getAll());
   const { supliers } = useAppSelector(SuplierSelectors.getAll());
+  const { colors } = useAppSelector(ColorSelectors.getAll());
 
   const dispatch = useAppDispatch();
 
@@ -71,15 +56,15 @@ export const ProductForm: React.FC = () => {
     initialValues: product
       ? product
       : {
-          id: "",
           name: "",
-          color: "",
-          suplierId: "",
-          suplierDisplay: "",
+          priceRecipt: 1000,
+          priceSale: 1000,
+          stock: 10,
+          colors: [] as Color[],
+          suplier: null,
+          category: null,
         },
-    validationSchema: product
-      ? validationUpdateProduct
-      : validationUpdateProduct.concat(validationCreateProduct),
+    validationSchema: validationSchema,
     validateOnChange: false,
     onSubmit: (values) => {
       if (product !== null) return handleUpdateProduct(values);
@@ -88,8 +73,17 @@ export const ProductForm: React.FC = () => {
   });
 
   const suplierSelected = useMemo(() => {
-    return supliers.find((s) => formik.values.roleIds.includes(s.id));
-  }, [supliers, formik.values.suplierId]);
+    return supliers.find((s) => formik.values.suplier?.id === s.id);
+  }, [supliers, formik.values.suplier]);
+
+  const categorySelected = useMemo(() => {
+    return categories.find((s) => formik.values.category?.id === s.id);
+  }, [categories, formik.values.category]);
+
+  const colorsSelected = useMemo(() => {
+    const colorIds = formik.values.colors.map((c) => c.id);
+    return colors.filter((s) => colorIds.includes(s.id));
+  }, [colors, formik.values.colors]);
 
   const handleCreateProduct = async (values) => {
     const result = await dispatch(ProductThunks.create(values));
@@ -101,16 +95,21 @@ export const ProductForm: React.FC = () => {
 
   const handleUpdateProduct = async (values) => {
     if (!product) return;
-    const editedFields = FormUtil.getDirtyValues(values, formik.initialValues);
-    const result = await dispatch(ProductThunks.update({ id: product.id, product: editedFields }));
+    const result = await dispatch(ProductThunks.update(values));
     if (ProductThunks.update.rejected.match(result)) return formik.setSubmitting(false);
     NotificationUtil.success("Đã chỉnh sửa sản phẩm thành công");
   };
 
-  const handleRoleChange = (value: Suplier | null) => {
-    if (!value) return;
-    formik.setFieldValue("suplierId", value.id);
-    formik.setFieldValue("suplierDisplay", value.name);
+  const handleSuplierChange = (value: Suplier | null) => {
+    formik.setFieldValue("suplier", value);
+  };
+
+  const handleCategoryChange = (value: Category | null) => {
+    formik.setFieldValue("category", value);
+  };
+
+  const handleColorChange = (value: Color[]) => {
+    formik.setFieldValue("colors", value);
   };
 
   return (
@@ -122,21 +121,81 @@ export const ProductForm: React.FC = () => {
       sx={{ maxHeight: "70vh" }}
     >
       <Grid container spacing={2}>
-        <Grid item md={12} xs={12}>
-          <TextFieldCustom
-            fullWidth
-            label="Mã sản phẩm"
-            name="id"
-            placeholder="Ví dụ: CB123456"
-            onTextChange={formik.setFieldValue}
-            required
-            value={formik.values.id}
-            variant="outlined"
-            error={!!formik.errors.id}
-            helperText={formik.errors.id}
+        <Grid item md={6} xs={12}>
+          <Autocomplete
+            id="select-suplier"
+            options={supliers}
+            value={suplierSelected || null}
+            onChange={(e, value) => {
+              handleSuplierChange(value);
+            }}
+            ListboxProps={{
+              style: {
+                maxHeight: "210px",
+              },
+            }}
+            getOptionLabel={(option) => `(${option.code}) ${option.name}`}
+            renderOption={(props, option, { selected }) => (
+              <li {...props}>
+                <Checkbox
+                  icon={icon}
+                  checkedIcon={checkedIcon}
+                  style={{ marginRight: 8 }}
+                  checked={selected}
+                />
+                {`(${option.code}) ${option.name}`}
+              </li>
+            )}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Nhà cung cấp"
+                required
+                placeholder="Nhập mã nhà cung cấp, tên nhà cung cấp..."
+                error={!!formik.errors.suplier}
+                helperText={formik.errors.suplier}
+              />
+            )}
           />
         </Grid>
 
+        <Grid item md={6} xs={12}>
+          <Autocomplete
+            id="select-category"
+            options={categories}
+            value={categorySelected || null}
+            onChange={(e, value) => {
+              handleCategoryChange(value);
+            }}
+            ListboxProps={{
+              style: {
+                maxHeight: "210px",
+              },
+            }}
+            getOptionLabel={(option) => `(${option.code}) ${option.name}`}
+            renderOption={(props, option, { selected }) => (
+              <li {...props}>
+                <Checkbox
+                  icon={icon}
+                  checkedIcon={checkedIcon}
+                  style={{ marginRight: 8 }}
+                  checked={selected}
+                />
+                {`(${option.code}) ${option.name}`}
+              </li>
+            )}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Loại sản phẩm"
+                required
+                placeholder="Nhập mã loại sản phẩm, tên loại sản phẩm..."
+                error={!!formik.errors.category}
+                helperText={formik.errors.category}
+              />
+            )}
+          />
+        </Grid>
         <Grid item md={12} xs={12}>
           <TextFieldCustom
             fullWidth
@@ -155,7 +214,22 @@ export const ProductForm: React.FC = () => {
         <Grid item md={12} xs={12}>
           <TextFieldCustom
             fullWidth
-            label="Giá sản phẩm"
+            label="Giá nhập (VNĐ)"
+            name="priceRecipt"
+            placeholder="Ví dụ: 30000"
+            required
+            onTextChange={formik.setFieldValue}
+            value={formik.values.priceRecipt}
+            variant="outlined"
+            error={!!formik.errors.priceRecipt}
+            helperText={formik.errors.priceRecipt}
+          />
+        </Grid>
+
+        <Grid item md={12} xs={12}>
+          <TextFieldCustom
+            fullWidth
+            label="Giá bán (VNĐ)"
             name="priceSale"
             placeholder="Ví dụ: 30000"
             required
@@ -168,12 +242,28 @@ export const ProductForm: React.FC = () => {
         </Grid>
 
         <Grid item md={12} xs={12}>
+          <TextFieldCustom
+            fullWidth
+            label="Số lượng"
+            name="stock"
+            placeholder="Ví dụ: 30"
+            required
+            onTextChange={formik.setFieldValue}
+            value={formik.values.stock}
+            variant="outlined"
+            error={!!formik.errors.stock}
+            helperText={formik.errors.stock}
+          />
+        </Grid>
+
+        <Grid item md={12} xs={12}>
           <Autocomplete
-            id="select-suplier"
-            options={supliers}
-            value={suplierSelected}
-            onChange={(e, value) => {
-              handleRoleChange(value);
+            multiple
+            id="muti-select-color"
+            options={colors}
+            value={colorsSelected}
+            onChange={(e, values) => {
+              handleColorChange(values);
             }}
             ListboxProps={{
               style: {
@@ -181,7 +271,26 @@ export const ProductForm: React.FC = () => {
               },
             }}
             disableCloseOnSelect
-            getOptionLabel={(option) => `(${option.id}) ${option.name}`}
+            getOptionLabel={(option) => `${option.name}`}
+            renderTags={(tagValue, getTagProps) =>
+              tagValue.map((option, index) => (
+                <Chip
+                  label={option.name}
+                  {...getTagProps({ index })}
+                  avatar={
+                    <Box
+                      sx={{
+                        backgroundColor: option.code,
+                        width: 20,
+                        height: 20,
+                        borderRadius: 20,
+                        mr: 1,
+                      }}
+                    ></Box>
+                  }
+                />
+              ))
+            }
             renderOption={(props, option, { selected }) => (
               <li {...props}>
                 <Checkbox
@@ -190,17 +299,27 @@ export const ProductForm: React.FC = () => {
                   style={{ marginRight: 8 }}
                   checked={selected}
                 />
-                {`(${option.id}) ${option.name}`}
+                <Stack direction={"row"}>
+                  <Box
+                    sx={{
+                      backgroundColor: option.code,
+                      width: 20,
+                      height: 20,
+                      borderRadius: 20,
+                      mr: 1,
+                    }}
+                  ></Box>
+                  {`${option.name}`}
+                </Stack>
               </li>
             )}
             renderInput={(params) => (
               <TextField
                 {...params}
-                label="Nhà cung cấp"
-                required
-                placeholder="Nhập mã nhà cung cấp, tên nhà cung cấp..."
-                error={!!formik.errors.suplierId}
-                helperText={formik.errors.suplierId}
+                label="Màu sắc"
+                placeholder="Nhập mã màu, tên màu..."
+                error={!!formik.errors.colors}
+                helperText={formik.errors.colors}
               />
             )}
           />

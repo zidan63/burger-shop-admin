@@ -1,10 +1,8 @@
 import { Box } from "@mui/material";
-import { User } from "@services/user";
 import { useAppDispatch, useAppSelector } from "@store";
 import { DataGridCustom } from "@components/_common/DataGridCustom";
 import { Delete, Edit } from "@mui/icons-material";
 import { NotificationUtil } from "@utils/NotificationUtil";
-import { RoleSelectors } from "@store/role";
 import { SuplierActions, SuplierSelectors, SuplierThunks } from "@store/suplier";
 import { Suplier } from "@services/suplier";
 
@@ -25,9 +23,7 @@ export const SuplierTable: React.FC = () => {
   };
 
   const handleRemoveOneSuplier = async (suplier: Suplier) => {
-    const isAccept = await NotificationUtil.warning(
-      `Bạn có chắc chắn muốn xóa người nhà cung cấp này ?`
-    );
+    const isAccept = await NotificationUtil.warning(`Bạn có chắc chắn muốn xóa nhà cung cấp này ?`);
     if (!isAccept) return;
     const result = await dispatch(SuplierThunks.delete(suplier.id));
     if (SuplierThunks.delete.rejected.match(result)) return;
@@ -64,7 +60,7 @@ export const SuplierTable: React.FC = () => {
         rowsData={supliers}
         columnsData={[
           {
-            field: "id",
+            field: "code",
             headerName: "Mã nhà cung cấp",
             type: "text",
           },
@@ -72,14 +68,11 @@ export const SuplierTable: React.FC = () => {
             field: "name",
             headerName: "Tên nhà cung cấp",
             type: "text",
-            minWidth: 200,
-            align: "left",
           },
           {
             field: "address",
             headerName: "Địa chỉ nhà cung cấp",
             type: "text",
-            align: "left",
           },
           {
             field: "phone",

@@ -51,7 +51,9 @@ const userSlice = createSlice({
         else state.filter = { ...action.meta.arg.userFilter };
       })
       .addCase(UserThunks.search.fulfilled, (state, action) => {
-        state.users = action.payload;
+        state.users = action.payload.records;
+        state.totalUser = action.payload.totalRecord;
+        state.filter.page = action.payload.pageCurrent;
         state.table.loading = false;
       })
       .addCase(UserThunks.search.rejected, (state) => {

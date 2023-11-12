@@ -1,11 +1,11 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { CategoryFilter } from "./types";
-import { SearchType } from "@types";
-import { Category, CreateCategory, UpdateCategory } from "@services/category";
+import { SearchResult, SearchType } from "@types";
+import { Category, CreateCategory } from "@services/category";
 import { categoryService } from "@services/category/CategoryService";
 
 export const CategoryThunks = {
-  search: createAsyncThunk<Category[], { categoryFilter?: CategoryFilter; isGetCount?: boolean }>(
+  search: createAsyncThunk<SearchResult<Category>, { categoryFilter?: CategoryFilter }>(
     "category/search",
     async (payload) => {
       return categoryService.search({ searchType: SearchType.NORMAL, ...payload.categoryFilter });
@@ -16,12 +16,9 @@ export const CategoryThunks = {
     return categoryService.create(category);
   }),
 
-  update: createAsyncThunk<Category, { id: string; category: UpdateCategory }>(
-    "category/update",
-    async (payload) => {
-      return categoryService.update(payload.id, payload.category);
-    }
-  ),
+  update: createAsyncThunk<Category, Category>("category/update", async (payload) => {
+    return categoryService.update(payload);
+  }),
 
   delete: createAsyncThunk<string, string>("category/delete", async (categoryId) => {
     await categoryService.delete(categoryId);
