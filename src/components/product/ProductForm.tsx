@@ -277,6 +277,7 @@ export const ProductForm: React.FC = () => {
                 <Chip
                   label={option.name}
                   {...getTagProps({ index })}
+                  key={option.id}
                   avatar={
                     <Box
                       sx={{

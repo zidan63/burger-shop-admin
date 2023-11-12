@@ -1,5 +1,6 @@
 import axios from "axios";
 import { withSessionRoute } from "@lib/withSession";
+import { User } from "@services/user";
 
 export default withSessionRoute(handler);
 
@@ -22,10 +23,22 @@ async function handler(req: any, res: any) {
     });
 
     const { accessToken, message } = response.data;
+
+    const resp = await axios.get(process.env.URL_SERVER_API + "/api/information", {
+      headers: {
+        authorization: accessToken ? `Bearer ${accessToken}` : undefined,
+      },
+    });
+
+    const userCurrent: User = resp.data;
+
     req.session.accessToken = accessToken;
+    req.session.userCurrentRoleCode = userCurrent.role.code;
+
     await req.session.save();
     res.status(200).json({ message: "Login success" });
   } catch (err) {
+    console.log(err);
     res.status(err?.response?.status || 500).json(err?.response?.data || "Server error !!!");
   }
 }

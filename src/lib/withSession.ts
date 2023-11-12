@@ -1,3 +1,4 @@
+import { User } from "@services/user";
 import { withIronSessionApiRoute, withIronSessionSsr } from "iron-session/next";
 import { GetServerSidePropsContext, GetServerSidePropsResult, NextApiHandler } from "next";
 
@@ -29,5 +30,6 @@ export function withSessionSsr<P extends { [key: string]: unknown } = { [key: st
 declare module "iron-session" {
   interface IronSessionData {
     accessToken?: string;
+    userCurrentRoleCode?: string;
   }
 }

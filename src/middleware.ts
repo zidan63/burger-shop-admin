@@ -19,9 +19,9 @@ export const middleware = async (req: NextRequest) => {
       ttl: 24 * 60 * 60,
     });
 
-    const { accessToken } = session;
+    const { userCurrentRoleCode } = session;
 
-    if (!accessToken) {
+    if (!userCurrentRoleCode || !["ADMIN", "SALER"].includes(userCurrentRoleCode)) {
       return NextResponse.redirect(new URL("/login", req.url));
     }
   }
