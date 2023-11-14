@@ -8,6 +8,7 @@ import { RoleSelectors } from "@store/role";
 import { ProductActions, ProductSelectors, ProductThunks } from "@store/product";
 import { Product } from "@services/product";
 import { formatMoney } from "@utils/DateFormat";
+import { Stack } from "@mui/system";
 
 export const ProductTable: React.FC = () => {
   const { products, totalProduct } = useAppSelector(ProductSelectors.getAll());
@@ -63,12 +64,32 @@ export const ProductTable: React.FC = () => {
       <DataGridCustom
         loading={table.loading}
         rowsData={products}
+        rowHeight={60}
         columnsData={[
           {
             field: "id",
             headerName: "Mã sản phẩm",
             type: "number",
           },
+          {
+            field: "imageName",
+            headerName: "Hình ảnh",
+            type: "object",
+            renderCell(params) {
+              const imageName = params.row.imageName;
+              return imageName ? (
+                <Box sx={{ width: "100%", p: 5, overflow: "hidden" }}>
+                  <img
+                    style={{ width: "100%", objectFit: "contain" }}
+                    src={"/api/file/download?fileName=" + imageName}
+                  />
+                </Box>
+              ) : (
+                <></>
+              );
+            },
+          },
+
           {
             field: "name",
             headerName: "Tên sản phẩm",
@@ -93,6 +114,12 @@ export const ProductTable: React.FC = () => {
             field: "stock",
             headerName: "Số lượng",
             type: "number",
+            minWidth: 200,
+          },
+          {
+            field: "description",
+            headerName: "Mô tả sản phẩm",
+            type: "text",
             minWidth: 200,
           },
           {

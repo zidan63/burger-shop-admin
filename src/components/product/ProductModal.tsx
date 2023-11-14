@@ -29,6 +29,7 @@ export const ProductModal = () => {
         },
         dialogContent: {
           width: { lg: "800px" },
+          height: "80vh",
         },
       }}
     >

@@ -9,6 +9,8 @@ export type Product = BaseRecord & {
   priceRecipt: number;
   priceSale: number;
   stock: number;
+  description: string;
+  imageName: string;
   colors: Color[];
   suplier: Suplier;
   category: Category;

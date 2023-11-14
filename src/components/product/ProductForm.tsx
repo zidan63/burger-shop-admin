@@ -1,9 +1,7 @@
-import { useState } from "react";
+import { useRef } from "react";
 import { Autocomplete, Box, Checkbox, Chip, Divider, Grid, TextField } from "@mui/material";
 import { useFormik } from "formik";
-import { UserSelectors, UserThunks } from "@store/user";
 import { useAppDispatch, useAppSelector } from "@store";
-import { RoleSelectors } from "@store/role";
 
 import { TextFieldCustom } from "@components/_common/TextFieldCustom";
 import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
@@ -13,15 +11,16 @@ import * as Yup from "yup";
 import { ButtonCustom } from "@components/_common/ButtonCustom";
 
 import { NotificationUtil } from "@utils/NotificationUtil";
-import { FormUtil } from "@utils/FormUtil";
 import { ProductSelectors, ProductThunks } from "@store/product";
 import { SuplierSelectors } from "@store/suplier";
-import { CreateSuplier, Suplier } from "@services/suplier";
+import { Suplier } from "@services/suplier";
 import { Color } from "@services/color";
 import { CategorySelectors } from "@store/category";
 import { Category } from "@services/category";
 import { ColorSelectors } from "@store/color";
 import { Stack } from "@mui/system";
+import { ImageUploadComp } from "@components/_common/ImageUpload";
+import { fileService } from "@services/file/FileService";
 
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
@@ -34,11 +33,11 @@ const validationSchema = Yup.object().shape({
   priceRecipt: Yup.number()
     .required("Giá nhập bắt buộc nhập!")
     .typeError("Giá nhập phải là số!")
-    .min(1000, "Giá nhập tối thiểu 1.000 VNĐ"),
+    .min(1, "Giá nhập tối thiểu 1 USD"),
   priceSale: Yup.number()
     .required("Giá bán bắt buộc nhập!")
     .typeError("Giá bán phải là số!")
-    .min(1000, "Giá bán tối thiểu 1.000 VNĐ"),
+    .min(1, "Giá bán tối thiểu 1 USD"),
   stock: Yup.number().required("Số lượng bắt buộc nhập!").typeError("Số lượng phải là số!"),
   suplier: Yup.object().required("Nhà cung cấp bắt buộc chọn!"),
   category: Yup.object().required("Loại sản phẩm bắt buộc chọn!"),
@@ -49,6 +48,7 @@ export const ProductForm: React.FC = () => {
   const { categories } = useAppSelector(CategorySelectors.getAll());
   const { supliers } = useAppSelector(SuplierSelectors.getAll());
   const { colors } = useAppSelector(ColorSelectors.getAll());
+  const imageUploadBoxRef = useRef<any>(null);
 
   const dispatch = useAppDispatch();
 
@@ -57,16 +57,24 @@ export const ProductForm: React.FC = () => {
       ? product
       : {
           name: "",
-          priceRecipt: 1000,
-          priceSale: 1000,
+          priceRecipt: 1,
+          priceSale: 1,
           stock: 10,
+          description: "",
+          imageName: "",
           colors: [] as Color[],
           suplier: null,
           category: null,
         },
     validationSchema: validationSchema,
     validateOnChange: false,
-    onSubmit: (values) => {
+    onSubmit: async (values) => {
+      const image = imageUploadBoxRef.current.getImage();
+      if (image) {
+        const result = await handleUploadFile(image);
+        values.imageName = result.imageName;
+      }
+
       if (product !== null) return handleUpdateProduct(values);
       else handleCreateProduct(values);
     },
@@ -85,12 +93,19 @@ export const ProductForm: React.FC = () => {
     return colors.filter((s) => colorIds.includes(s.id));
   }, [colors, formik.values.colors]);
 
+  const handleUploadFile = async (file) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    return fileService.uploadFile(formData);
+  };
+
   const handleCreateProduct = async (values) => {
     const result = await dispatch(ProductThunks.create(values));
     if (ProductThunks.create.rejected.match(result)) return formik.setSubmitting(false);
 
     NotificationUtil.success("Đã thêm sản phẩm thành công");
     formik.resetForm();
+    imageUploadBoxRef.current.setImageState("");
   };
 
   const handleUpdateProduct = async (values) => {
@@ -214,9 +229,9 @@ export const ProductForm: React.FC = () => {
         <Grid item md={12} xs={12}>
           <TextFieldCustom
             fullWidth
-            label="Giá nhập (VNĐ)"
+            label="Giá nhập (USD)"
             name="priceRecipt"
-            placeholder="Ví dụ: 30000"
+            placeholder="Ví dụ: $10"
             required
             onTextChange={formik.setFieldValue}
             value={formik.values.priceRecipt}
@@ -229,9 +244,9 @@ export const ProductForm: React.FC = () => {
         <Grid item md={12} xs={12}>
           <TextFieldCustom
             fullWidth
-            label="Giá bán (VNĐ)"
+            label="Giá bán (USD)"
             name="priceSale"
-            placeholder="Ví dụ: 30000"
+            placeholder="Ví dụ: $10"
             required
             onTextChange={formik.setFieldValue}
             value={formik.values.priceSale}
@@ -323,6 +338,25 @@ export const ProductForm: React.FC = () => {
                 helperText={formik.errors.colors}
               />
             )}
+          />
+        </Grid>
+        <Grid item md={6} xs={12}>
+          <ImageUploadComp
+            imageUploadBoxRef={imageUploadBoxRef}
+            imageUrl={product ? `/api/file/download?fileName=${product.imageName}` : ""}
+          />
+        </Grid>
+        <Grid item md={6} xs={12}>
+          <TextField
+            multiline
+            fullWidth
+            minRows={4.6}
+            label="Mô tả sản phẩm"
+            name="description"
+            placeholder=""
+            onChange={(e) => formik.setFieldValue("description", e.target.value)}
+            value={formik.values.description}
+            variant="outlined"
           />
         </Grid>
       </Grid>

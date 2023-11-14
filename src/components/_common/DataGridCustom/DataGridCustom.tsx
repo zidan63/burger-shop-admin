@@ -36,6 +36,7 @@ type RowProps<T = any> = {
 type GridDataTableProps<T> = {
   loading?: boolean;
   sx?: any;
+  rowHeight?: number;
   rowsData: T[];
   columnsData: ColumnProps<T>[];
   isLongOption?: boolean;
@@ -57,6 +58,7 @@ export function DataGridCustom<T>({
   options,
   showSelection,
   pagination,
+  rowHeight,
   loading: loadingExternal,
   onScroll,
   onRowClick,
@@ -274,7 +276,7 @@ export function DataGridCustom<T>({
           rowSelectionModel={showSelection?.selected}
           disableColumnMenu
           rows={rows}
-          rowHeight={rows.length ? 48 : undefined}
+          rowHeight={rows.length ? rowHeight || 48 : undefined}
           columnHeaderHeight={48}
           sx={{ height: rows.length ? "auto" : 250, ...sx }}
           showCellVerticalBorder={false}

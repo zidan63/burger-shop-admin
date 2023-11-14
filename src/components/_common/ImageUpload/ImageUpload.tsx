@@ -12,7 +12,6 @@ export const ImageUploadComp: React.FC<Props> = ({ imageUploadBoxRef, imageUrl =
   const [imageBase64, setImageBase64] = useState<string>(imageUrl);
   const [imageFile, setImageFile] = useState<any>(null);
 
-  console.log(imageBase64);
   useImperativeHandle(imageUploadBoxRef, () => ({
     getImage: () => {
       return imageFile;
@@ -81,7 +80,7 @@ export const ImageUploadComp: React.FC<Props> = ({ imageUploadBoxRef, imageUrl =
             border: "1px solid #ced4da",
             borderRadius: "15px",
             overflow: "hidden",
-            height: "500px",
+            // height: "800px",
           }}
         >
           <img style={{ width: "100%", objectFit: "contain" }} src={imageBase64} />

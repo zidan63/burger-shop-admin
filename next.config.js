@@ -19,6 +19,14 @@ const nextConfig = {
     },
   },
   reactStrictMode: false,
+  rewrites: () => {
+    return [
+      {
+        source: "/api/file/download",
+        destination: "http://localhost:8080/api/file/download", // Chuyển hướng các yêu cầu API đến máy chủ
+      },
+    ];
+  },
 };
 
 module.exports = nextConfig;

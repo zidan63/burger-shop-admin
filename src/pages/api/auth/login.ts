@@ -22,15 +22,15 @@ async function handler(req: any, res: any) {
       password,
     });
 
-    const { accessToken, message } = response.data;
+    const { accessToken, user } = response.data;
 
-    const resp = await axios.get(process.env.URL_SERVER_API + "/api/information", {
-      headers: {
-        authorization: accessToken ? `Bearer ${accessToken}` : undefined,
-      },
-    });
+    // const resp = await axios.get(process.env.URL_SERVER_API + "/api/information", {
+    //   headers: {
+    //     authorization: accessToken ? `Bearer ${accessToken}` : undefined,
+    //   },
+    // });
 
-    const userCurrent: User = resp.data;
+    const userCurrent: User = user;
 
     req.session.accessToken = accessToken;
     req.session.userCurrentRoleCode = userCurrent.role.code;

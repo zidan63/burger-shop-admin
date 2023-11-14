@@ -16,9 +16,9 @@ export const formatDate = (date: any) => {
 
 export const formatMoney = (amount: number) => {
   // Sử dụng Intl.NumberFormat để định dạng số
-  const formatter = new Intl.NumberFormat("vi-VN", {
+  const formatter = new Intl.NumberFormat("en-US", {
     style: "currency",
-    currency: "VND",
+    currency: "USD",
   });
 
   // Định dạng số và trả về chuỗi đã được định dạng
