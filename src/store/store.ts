@@ -8,7 +8,7 @@ import { roleSlice } from "./role";
 
 import { authSlice } from "./auth";
 import { productSlice } from "./product";
-import { suplierSlice } from "./suplier";
+import { supplierSlice } from "./supplier";
 import { categorySlice } from "./category";
 import { colorSlice } from "./color";
 
@@ -18,7 +18,7 @@ const rootReducer = combineReducers({
   category: categorySlice.reducer,
   color: colorSlice.reducer,
   product: productSlice.reducer,
-  suplier: suplierSlice.reducer,
+  supplier: supplierSlice.reducer,
   role: roleSlice.reducer,
 });
 

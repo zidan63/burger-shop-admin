@@ -15,7 +15,7 @@ import { ProductFilter } from "@components/product/ProductFilter";
 import { ProductTable } from "@components/product/ProductTable";
 import { ProductModal } from "@components/product/ProductModal";
 import { CategoryThunks } from "@store/category";
-import { SuplierThunks } from "@store/suplier";
+import { SuplierThunks } from "@store/supplier";
 import { ColorThunks } from "@store/color";
 
 const Page = () => {

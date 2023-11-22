@@ -1,6 +1,6 @@
 import { Category } from "@services/category";
 import { Color } from "@services/color";
-import { Suplier } from "@services/suplier";
+import { Suplier } from "@services/supplier";
 import { User } from "@services/user";
 import { BaseRecord } from "@types";
 

@@ -2,15 +2,15 @@ import HeaderCustom from "@components/_common/HeaderCustom/HeaderCustom";
 import AddIcon from "@mui/icons-material/Add";
 import { Box, Button } from "@mui/material";
 import { useAppDispatch } from "@store";
-import { SuplierActions } from "@store/suplier";
+import { SupplierActions } from "@store/supplier";
 
 export const SuplierToolbar = () => {
   const dispatch = useAppDispatch();
   const handleAdd = () => {
     dispatch(
-      SuplierActions.setForm({
+      SupplierActions.setForm({
         open: true,
-        suplier: null,
+        supplier: null,
       })
     );
   };

@@ -1,17 +1,18 @@
 import DialogCustom from "@components/_common/DialogCustom/DialogCustom";
+import { OrderForm } from "./OrderForm";
 import { useAppDispatch, useAppSelector } from "@store";
-import { SuplierActions, SuplierSelectors } from "@store/suplier";
-import { SuplierForm } from "./SuplierForm";
+import { UserActions, UserSelectors } from "@store/user";
+import { CategoryActions, CategorySelectors } from "@store/category";
 
-export const SuplierModal = () => {
-  const { open, suplier } = useAppSelector(SuplierSelectors.getForm());
+export const OrderModal = () => {
+  const { open, category } = useAppSelector(CategorySelectors.getForm());
   const dispatch = useAppDispatch();
 
   const handleClose = () => {
     dispatch(
-      SuplierActions.setForm({
+      CategoryActions.setForm({
         open: false,
-        suplier: null,
+        category: null,
       })
     );
   };
@@ -20,7 +21,7 @@ export const SuplierModal = () => {
     <DialogCustom
       open={open}
       onClose={handleClose}
-      title={!suplier ? "Thêm mới nhà cung cấp" : "Chỉnh sửa thông tin nhà cung cấp"}
+      title={!category ? "Thêm mới loại sản phẩm" : "Chỉnh sửa thông tin loại sản phẩm"}
       subTitle={"Nhập thông tin vào các ô tương ứng"}
       style={{
         dialog: {
@@ -31,7 +32,7 @@ export const SuplierModal = () => {
         },
       }}
     >
-      <SuplierForm />
+      <OrderForm />
     </DialogCustom>
   );
 };

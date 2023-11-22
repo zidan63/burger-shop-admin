@@ -12,8 +12,8 @@ import { ButtonCustom } from "@components/_common/ButtonCustom";
 
 import { NotificationUtil } from "@utils/NotificationUtil";
 import { ProductSelectors, ProductThunks } from "@store/product";
-import { SuplierSelectors } from "@store/suplier";
-import { Suplier } from "@services/suplier";
+import { SuplierSelectors } from "@store/supplier";
+import { Suplier } from "@services/supplier";
 import { Color } from "@services/color";
 import { CategorySelectors } from "@store/category";
 import { Category } from "@services/category";

@@ -8,25 +8,25 @@ import { RoleToolbar } from "@components/role/RoleToolbar";
 import { DashboardLayout } from "@layouts/dashboard/DashboardLayout";
 
 import { useAppDispatch } from "@store";
-import { SuplierToolbar } from "@components/suplier/SuplierToolbar";
-import { SuplierFilter } from "@components/suplier/SuplierFilter";
-import { SuplierTable } from "@components/suplier/SuplierTable";
-import { SuplierModal } from "@components/suplier/SuplierModal";
-import { SuplierThunks } from "@store/suplier";
+import { SupplierToolbar } from "@components/supplier/SupplierToolbar";
+import { SupplierFilter } from "@components/supplier/SupplierFilter";
+import { SupplierTable } from "@components/supplier/SupplierTable";
+import { SupplierModal } from "@components/supplier/SupplierModal";
+import { SupplierThunks } from "@store/supplier";
 
 const Page = () => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(SuplierThunks.search({}));
+    dispatch(SupplierThunks.search({}));
   }, []);
 
   return (
     <Stack gap={2}>
-      <SuplierToolbar />
-      <SuplierFilter />
-      <SuplierTable />
-      <SuplierModal />
+      <SupplierToolbar />
+      <SupplierFilter />
+      <SupplierTable />
+      <SupplierModal />
     </Stack>
   );
 };

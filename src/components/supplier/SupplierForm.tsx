@@ -9,7 +9,7 @@ import { ButtonCustom } from "@components/_common/ButtonCustom";
 
 import { NotificationUtil } from "@utils/NotificationUtil";
 
-import { SuplierSelectors, SuplierThunks } from "@store/suplier";
+import { SuplierSelectors, SuplierThunks } from "@store/supplier";
 
 const validationSchema = Yup.object().shape({
   code: Yup.string()

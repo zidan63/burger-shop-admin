@@ -7,6 +7,7 @@ import TroubleshootIcon from "@mui/icons-material/Troubleshoot";
 import FastfoodIcon from "@mui/icons-material/Fastfood";
 import ColorLensIcon from "@mui/icons-material/ColorLens";
 import CategoryIcon from "@mui/icons-material/Category";
+import InventoryIcon from "@mui/icons-material/Inventory";
 
 export const SideBarRouteAdmin: SubNavItem[] = [
   {
@@ -23,6 +24,11 @@ export const SideBarRouteAdmin: SubNavItem[] = [
     href: "/role",
     icon: <RollerShades fontSize="small" />,
     title: "Quản lý vai trò",
+  },
+  {
+    href: "/package",
+    icon: <InventoryIcon fontSize="small" />,
+    title: "Quản lý đơn hàng",
   },
   {
     href: "/color",
