@@ -19,11 +19,14 @@ const nextConfig = {
     },
   },
   reactStrictMode: false,
+  serverRuntimeConfig: {
+    port: process.env.NEXT_PUBLIC_APP_PORT || 3000,
+  },
   rewrites: () => {
     return [
       {
         source: "/api/file/download",
-        destination: "http://localhost:3000/api/file/download", 
+        destination: `${process.env.NEXT_PUBLIC_URL_SERVER_API}/api/file/download`,
       },
     ];
   },
