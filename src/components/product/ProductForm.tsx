@@ -12,8 +12,8 @@ import { ButtonCustom } from "@components/_common/ButtonCustom";
 
 import { NotificationUtil } from "@utils/NotificationUtil";
 import { ProductSelectors, ProductThunks } from "@store/product";
-import { SuplierSelectors } from "@store/suplier";
-import { Suplier } from "@services/suplier";
+import { SupplierSelectors } from "@store/supplier";
+import { Supplier } from "@services/supplier";
 import { Color } from "@services/color";
 import { CategorySelectors } from "@store/category";
 import { Category } from "@services/category";
@@ -39,14 +39,14 @@ const validationSchema = Yup.object().shape({
     .typeError("Giá bán phải là số!")
     .min(1, "Giá bán tối thiểu 1 USD"),
   stock: Yup.number().required("Số lượng bắt buộc nhập!").typeError("Số lượng phải là số!"),
-  suplier: Yup.object().required("Nhà cung cấp bắt buộc chọn!"),
+  supplier: Yup.object().required("Nhà cung cấp bắt buộc chọn!"),
   category: Yup.object().required("Loại sản phẩm bắt buộc chọn!"),
 });
 
 export const ProductForm: React.FC = () => {
   const { product } = useAppSelector(ProductSelectors.getForm());
   const { categories } = useAppSelector(CategorySelectors.getAll());
-  const { supliers } = useAppSelector(SuplierSelectors.getAll());
+  const { suppliers } = useAppSelector(SupplierSelectors.getAll());
   const { colors } = useAppSelector(ColorSelectors.getAll());
   const imageUploadBoxRef = useRef<any>(null);
 
@@ -63,7 +63,7 @@ export const ProductForm: React.FC = () => {
           description: "",
           imageName: "",
           colors: [] as Color[],
-          suplier: null,
+          supplier: null,
           category: null,
         },
     validationSchema: validationSchema,
@@ -80,9 +80,9 @@ export const ProductForm: React.FC = () => {
     },
   });
 
-  const suplierSelected = useMemo(() => {
-    return supliers.find((s) => formik.values.suplier?.id === s.id);
-  }, [supliers, formik.values.suplier]);
+  const supplierSelected = useMemo(() => {
+    return suppliers.find((s) => formik.values.supplier?.id === s.id);
+  }, [suppliers, formik.values.supplier]);
 
   const categorySelected = useMemo(() => {
     return categories.find((s) => formik.values.category?.id === s.id);
@@ -115,8 +115,8 @@ export const ProductForm: React.FC = () => {
     NotificationUtil.success("Đã chỉnh sửa sản phẩm thành công");
   };
 
-  const handleSuplierChange = (value: Suplier | null) => {
-    formik.setFieldValue("suplier", value);
+  const handleSupplierChange = (value: Supplier | null) => {
+    formik.setFieldValue("supplier", value);
   };
 
   const handleCategoryChange = (value: Category | null) => {
@@ -138,11 +138,11 @@ export const ProductForm: React.FC = () => {
       <Grid container spacing={2}>
         <Grid item md={6} xs={12}>
           <Autocomplete
-            id="select-suplier"
-            options={supliers}
-            value={suplierSelected || null}
+            id="select-supplier"
+            options={suppliers}
+            value={supplierSelected || null}
             onChange={(e, value) => {
-              handleSuplierChange(value);
+              handleSupplierChange(value);
             }}
             ListboxProps={{
               style: {
@@ -167,8 +167,8 @@ export const ProductForm: React.FC = () => {
                 label="Nhà cung cấp"
                 required
                 placeholder="Nhập mã nhà cung cấp, tên nhà cung cấp..."
-                error={!!formik.errors.suplier}
-                helperText={formik.errors.suplier}
+                error={!!formik.errors.supplier}
+                helperText={formik.errors.supplier}
               />
             )}
           />

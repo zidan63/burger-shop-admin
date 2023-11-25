@@ -1,7 +1,7 @@
-import { Suplier } from "@services/suplier";
+import { Supplier } from "@services/supplier";
 import { BaseFilter } from "@types";
 
-export type SuplierFilter = BaseFilter & {
+export type SupplierFilter = BaseFilter & {
   id?: string;
   name?: string;
   address?: string;
@@ -10,7 +10,7 @@ export type SuplierFilter = BaseFilter & {
   createdAtFrom?: number;
 };
 
-export type SuplierForm = {
+export type SupplierForm = {
   open: boolean;
-  suplier: Suplier | null;
+  supplier: Supplier | null;
 };

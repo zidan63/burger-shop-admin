@@ -2,21 +2,21 @@ import HeaderCustom from "@components/_common/HeaderCustom/HeaderCustom";
 import AddIcon from "@mui/icons-material/Add";
 import { Box, Button } from "@mui/material";
 import { useAppDispatch } from "@store";
-import { SuplierActions } from "@store/suplier";
+import { AddressActions } from "@store/address";
 
-export const SuplierToolbar = () => {
+export const AddressToolbar = () => {
   const dispatch = useAppDispatch();
   const handleAdd = () => {
     dispatch(
-      SuplierActions.setForm({
+      AddressActions.setForm({
         open: true,
-        suplier: null,
+        address: null,
       })
     );
   };
 
   return (
-    <HeaderCustom title="Quản lý nhà cung cấp">
+    <HeaderCustom title="Quản lý loại sản phẩm">
       <Box>
         <Button
           color="primary"
@@ -24,7 +24,7 @@ export const SuplierToolbar = () => {
           onClick={() => handleAdd()}
           startIcon={<AddIcon />}
         >
-          Thêm nhà cung cấp
+          Thêm loại sản phẩm
         </Button>
       </Box>
     </HeaderCustom>

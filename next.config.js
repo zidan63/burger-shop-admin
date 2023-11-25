@@ -23,7 +23,7 @@ const nextConfig = {
     return [
       {
         source: "/api/file/download",
-        destination: "http://localhost:8080/api/file/download",
+        destination: "http://localhost:3000/api/file/download", 
       },
     ];
   },
