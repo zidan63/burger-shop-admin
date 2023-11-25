@@ -23,7 +23,7 @@ const nextConfig = {
     return [
       {
         source: "/api/file/download",
-        destination: "http://localhost:8080/api/file/download", // Chuyển hướng các yêu cầu API đến máy chủ
+        destination: "http://localhost:3000/api/file/download", // Chuyển hướng các yêu cầu API đến máy chủ
       },
     ];
   },

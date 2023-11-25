@@ -3,37 +3,37 @@ import { useAppDispatch, useAppSelector } from "@store";
 import { DataGridCustom } from "@components/_common/DataGridCustom";
 import { Delete, Edit } from "@mui/icons-material";
 import { NotificationUtil } from "@utils/NotificationUtil";
-import { SuplierActions, SuplierSelectors, SuplierThunks } from "@store/suplier";
-import { Suplier } from "@services/suplier";
+import { SupplierActions, SupplierSelectors, SupplierThunks } from "@store/supplier";
+import { Supplier } from "@services/supplier";
 
-export const SuplierTable: React.FC = () => {
-  const { supliers, totalSuplier } = useAppSelector(SuplierSelectors.getAll());
-  const filter = useAppSelector(SuplierSelectors.getFilter());
-  const table = useAppSelector(SuplierSelectors.getTable());
+export const SupplierTable: React.FC = () => {
+  const { suppliers, totalSupplier } = useAppSelector(SupplierSelectors.getAll());
+  const filter = useAppSelector(SupplierSelectors.getFilter());
+  const table = useAppSelector(SupplierSelectors.getTable());
 
   const dispatch = useAppDispatch();
 
-  const handleEdit = (suplier: Suplier) => {
+  const handleEdit = (supplier: Supplier) => {
     dispatch(
-      SuplierActions.setForm({
+      SupplierActions.setForm({
         open: true,
-        suplier: suplier,
+        supplier: supplier,
       })
     );
   };
 
-  const handleRemoveOneSuplier = async (suplier: Suplier) => {
+  const handleRemoveOneSupplier = async (supplier: Supplier) => {
     const isAccept = await NotificationUtil.warning(`Bạn có chắc chắn muốn xóa nhà cung cấp này ?`);
     if (!isAccept) return;
-    const result = await dispatch(SuplierThunks.delete(suplier.id));
-    if (SuplierThunks.delete.rejected.match(result)) return;
+    const result = await dispatch(SupplierThunks.delete(supplier.id));
+    if (SupplierThunks.delete.rejected.match(result)) return;
     NotificationUtil.success("Đã xóa nhà cung cấp thành công");
   };
 
   const handlePageChange = async (page) => {
     dispatch(
-      SuplierThunks.search({
-        suplierFilter: {
+      SupplierThunks.search({
+        supplierFilter: {
           ...filter,
           page,
         },
@@ -43,8 +43,8 @@ export const SuplierTable: React.FC = () => {
 
   const handlePageSizeChange = (pageSize) => {
     dispatch(
-      SuplierThunks.search({
-        suplierFilter: {
+      SupplierThunks.search({
+        supplierFilter: {
           ...filter,
           pageSize,
           page: 1,
@@ -57,7 +57,7 @@ export const SuplierTable: React.FC = () => {
     <Box>
       <DataGridCustom
         loading={table.loading}
-        rowsData={supliers}
+        rowsData={suppliers}
         columnsData={[
           {
             field: "code",
@@ -94,7 +94,7 @@ export const SuplierTable: React.FC = () => {
           {
             label: "Xóa",
             icon: <Delete />,
-            handleClick: (row) => handleRemoveOneSuplier(row),
+            handleClick: (row) => handleRemoveOneSupplier(row),
             style: {
               color: "#dc3545",
             },
@@ -103,7 +103,7 @@ export const SuplierTable: React.FC = () => {
         pagination={{
           page: filter.page,
           pageSize: filter.pageSize,
-          totalRecord: totalSuplier,
+          totalRecord: totalSupplier,
           onPageChange: handlePageChange,
           onPageSizeChange: handlePageSizeChange,
         }}

@@ -98,24 +98,7 @@ export const ColorForm: React.FC = () => {
             }}
           />
         </Grid>
-        <Grid item md={12} xs={12}>
-          <PhotoshopPicker
-            styles={{
-              default: {
-                picker: {
-                  width: "100%",
-                  boxShadow: "unset",
-                },
-              },
-            }}
-            color={formik.values.code}
-            onChange={(color) => {
-              formik.setFieldValue("code", color.hex);
-              if (inputColorRef.current?.setInnerValue)
-                inputColorRef.current.setInnerValue(color.hex);
-            }}
-          />
-        </Grid>
+        <Grid item md={12} xs={12}></Grid>
       </Grid>
       <Divider sx={{ mt: 3 }} />
       <Box

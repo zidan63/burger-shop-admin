@@ -6,3 +6,12 @@ export function formatCapitalize(str: string) {
     }
   );
 }
+
+export function formatCurrency(currency: string, number: number): string {
+  const formatter = new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: currency,
+  });
+
+  return formatter.format(number);
+}

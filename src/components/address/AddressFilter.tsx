@@ -2,18 +2,17 @@ import React from "react";
 import { useAppDispatch, useAppSelector } from "@store";
 import { FilterAdvance, FilterAdvanceSearchItemOptions } from "@components/_common/FilterAdvance";
 import { SearchType } from "@types";
-import { ProductSelectors, ProductThunks } from "@store/product";
+import { AddressSelectors, AddressThunks } from "@store/address";
 
-export const ProductFilter: React.FC = () => {
-  const filter = useAppSelector(ProductSelectors.getFilter());
+export const AddressFilter: React.FC = () => {
+  const filter = useAppSelector(AddressSelectors.getFilter());
 
   const dispatch = useAppDispatch();
 
   const handleSearch = (value: string) => {
     dispatch(
-      ProductThunks.search({
-        isGetCount: true,
-        productFilter: {
+      AddressThunks.search({
+        addressFilter: {
           page: 1,
           pageSize: filter.pageSize,
         },
@@ -23,9 +22,8 @@ export const ProductFilter: React.FC = () => {
 
   const handleSearchAdvance = (values) => {
     dispatch(
-      ProductThunks.search({
-        isGetCount: true,
-        productFilter: {
+      AddressThunks.search({
+        addressFilter: {
           ...values,
           searchType: SearchType.ADVANCED,
           page: 1,
@@ -35,7 +33,7 @@ export const ProductFilter: React.FC = () => {
   };
 
   function handleReset() {
-    dispatch(ProductThunks.search({ isGetCount: true }));
+    dispatch(AddressThunks.search({}));
   }
 
   return (
@@ -44,33 +42,21 @@ export const ProductFilter: React.FC = () => {
       onSearchAdvance={handleSearchAdvance}
       onReset={handleReset}
       searchItem={{
-        label: "Tìm kiếm sản phẩm",
-        placeholder: "Nhập mã sản phẩm, tên sản phẩm, màu sản phẩm, giá sản phẩm,... ",
+        label: "Tìm kiếm loại sản phẩm",
+        placeholder: "Nhập mã loại sản phẩm, tên loại sản phẩm,... ",
       }}
       searchItemAdvances={[
         {
           field: "id",
           type: "text",
-          label: "Mã sản phẩm",
+          label: "Mã loại sản phẩm",
           placeholder: "Ví dụ: 0001",
         },
         {
           field: "name",
           type: "text",
-          label: "Tên sản phẩm",
+          label: "Tên loại sản phẩm",
           placeholder: "Ví dụ: Burger gà",
-        },
-        {
-          field: "priceSale",
-          type: "text",
-          label: "Giá sản phẩm",
-          placeholder: "Ví dụ: 30000",
-        },
-        {
-          field: "supplierId",
-          type: "options",
-          label: "Nhà cung cấp",
-          placeholder: "Ví dụ: Công ty A",
         },
         {
           field: "createdAtFrom",
@@ -81,6 +67,16 @@ export const ProductFilter: React.FC = () => {
           field: "createdAtTo",
           type: "date",
           label: "Ngày tạo đến ngày",
+        },
+        {
+          field: "updatedAtFrom",
+          type: "date",
+          label: "Ngày chỉnh sửa từ ngày",
+        },
+        {
+          field: "updatedAtTo",
+          type: "date",
+          label: "Ngày chỉnh sửa đến ngày",
         },
       ]}
     />

@@ -2,18 +2,18 @@ import React from "react";
 import { useAppDispatch, useAppSelector } from "@store";
 import { FilterAdvance } from "@components/_common/FilterAdvance";
 import { SearchType } from "@types";
-import { SuplierSelectors, SuplierThunks } from "@store/suplier";
+import { SupplierSelectors, SupplierThunks } from "@store/supplier";
 
-export const SuplierFilter: React.FC = () => {
-  const filter = useAppSelector(SuplierSelectors.getFilter());
+export const SupplierFilter: React.FC = () => {
+  const filter: any = useAppSelector(SupplierSelectors.getFilter());
 
   const dispatch = useAppDispatch();
 
   const handleSearch = (value: string) => {
     dispatch(
-      SuplierThunks.search({
+      SupplierThunks.search({
         isGetCount: true,
-        suplierFilter: {
+        supplierFilter: {
           page: 1,
           pageSize: filter.pageSize,
         },
@@ -23,9 +23,9 @@ export const SuplierFilter: React.FC = () => {
 
   const handleSearchAdvance = (values) => {
     dispatch(
-      SuplierThunks.search({
+      SupplierThunks.search({
         isGetCount: true,
-        suplierFilter: {
+        supplierFilter: {
           ...values,
           searchType: SearchType.ADVANCED,
           page: 1,
@@ -35,7 +35,7 @@ export const SuplierFilter: React.FC = () => {
   };
 
   function handleReset() {
-    dispatch(SuplierThunks.search({ isGetCount: true }));
+    dispatch(SupplierThunks.search({ isGetCount: true }));
   }
 
   return (

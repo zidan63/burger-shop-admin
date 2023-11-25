@@ -63,7 +63,7 @@ const getTypeName = (typeName: string) => {
     ROLE: "Quản lý vai trò",
     CATEGORY: "Quản lý loại sản phẩm",
     COLOR: "Quản  lý màu sắc",
-    SUPLIER: "Quản lý nhà cung cấp",
+    SUPPLIER: "Quản lý nhà cung cấp",
     PRODUCT: "Quản lý sản phẩm",
     CART: "Quản lý giỏ hàng",
     BILL: "Quản lý đơn hàng",

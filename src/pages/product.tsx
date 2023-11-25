@@ -15,7 +15,7 @@ import { ProductFilter } from "@components/product/ProductFilter";
 import { ProductTable } from "@components/product/ProductTable";
 import { ProductModal } from "@components/product/ProductModal";
 import { CategoryThunks } from "@store/category";
-import { SuplierThunks } from "@store/suplier";
+import { SupplierThunks } from "@store/supplier";
 import { ColorThunks } from "@store/color";
 
 const Page = () => {
@@ -24,7 +24,7 @@ const Page = () => {
   useEffect(() => {
     dispatch(ProductThunks.search({}));
     dispatch(ColorThunks.search({ colorFilter: { pageSize: 1000 } }));
-    dispatch(SuplierThunks.search({ suplierFilter: { pageSize: 1000 } }));
+    dispatch(SupplierThunks.search({ supplierFilter: { pageSize: 1000 } }));
     dispatch(CategoryThunks.search({ categoryFilter: { pageSize: 1000 } }));
   }, []);
 

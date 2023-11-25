@@ -1,5 +1,5 @@
 import { SubNavItem } from "@layouts/dashboard/SubNav";
-import { RollerShades } from "@mui/icons-material";
+import { Business, RollerShades } from "@mui/icons-material";
 import GroupIcon from "@mui/icons-material/Group";
 import SignalCellularAltIcon from "@mui/icons-material/SignalCellularAlt";
 import MapsHomeWorkIcon from "@mui/icons-material/MapsHomeWork";
@@ -7,6 +7,7 @@ import TroubleshootIcon from "@mui/icons-material/Troubleshoot";
 import FastfoodIcon from "@mui/icons-material/Fastfood";
 import ColorLensIcon from "@mui/icons-material/ColorLens";
 import CategoryIcon from "@mui/icons-material/Category";
+import InventoryIcon from "@mui/icons-material/Inventory";
 
 export const SideBarRouteAdmin: SubNavItem[] = [
   {
@@ -25,9 +26,19 @@ export const SideBarRouteAdmin: SubNavItem[] = [
     title: "Quản lý vai trò",
   },
   {
+    href: "/order",
+    icon: <InventoryIcon fontSize="small" />,
+    title: "Quản lý đơn hàng",
+  },
+  {
     href: "/color",
     icon: <ColorLensIcon fontSize="small" />,
     title: "Quản lý màu",
+  },
+  {
+    href: "/address",
+    icon: <Business fontSize="small" />,
+    title: "Quản lý địa chỉ",
   },
   {
     href: "/category",
@@ -40,7 +51,7 @@ export const SideBarRouteAdmin: SubNavItem[] = [
     title: "Quản lý sản phẩm",
   },
   {
-    href: "/suplier",
+    href: "/supplier",
     icon: <MapsHomeWorkIcon fontSize="small" />,
     title: "Quản lý nhà cung cấp",
   },
@@ -68,7 +79,7 @@ export const SideBarRouteSaler: SubNavItem[] = [
     title: "Quản lý sản phẩm",
   },
   {
-    href: "/suplier",
+    href: "/supplier",
     icon: <MapsHomeWorkIcon fontSize="small" />,
     title: "Quản lý nhà cung cấp",
   },
