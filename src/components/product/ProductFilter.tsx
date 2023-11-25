@@ -1,8 +1,9 @@
-import React from "react";
-import { useAppDispatch, useAppSelector } from "@store";
 import { FilterAdvance, FilterAdvanceSearchItemOptions } from "@components/_common/FilterAdvance";
-import { SearchType } from "@types";
 import { ProductSelectors, ProductThunks } from "@store/product";
+import { useAppDispatch, useAppSelector } from "@store";
+
+import React from "react";
+import { SearchType } from "@types";
 
 export const ProductFilter: React.FC = () => {
   const filter = useAppSelector(ProductSelectors.getFilter());
