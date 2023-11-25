@@ -11,8 +11,16 @@ export const OrderThunks = {
       return orderService.search({ searchType: SearchType.NORMAL, ...payload.orderFilter });
     }
   ),
-
-  update: createAsyncThunk<Order, Order>("order/update", async (payload) => {
+  statisticSearch: createAsyncThunk<SearchResult<Order>, { orderFilter?: OrderFilter }>(
+    "order/staisticSearch",
+    async (payload) => {
+      return orderService.statisticSearch({
+        searchType: SearchType.ADVANCED,
+        ...payload.orderFilter,
+      });
+    }
+  ),
+  update: createAsyncThunk<Order, Partial<Order>>("order/update", async (payload) => {
     return orderService.update(payload);
   }),
 

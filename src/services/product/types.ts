@@ -1,6 +1,6 @@
 import { Category } from "@services/category";
 import { Color } from "@services/color";
-import { Suplier } from "@services/supplier";
+import { Supplier } from "@services/supplier";
 import { User } from "@services/user";
 import { BaseRecord } from "@types";
 
@@ -12,7 +12,7 @@ export type Product = BaseRecord & {
   description: string;
   imageName: string;
   colors: Color[];
-  suplier: Suplier;
+  supplier: Supplier;
   category: Category;
   user: User;
 };

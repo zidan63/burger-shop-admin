@@ -4,7 +4,7 @@ import { Box, Button } from "@mui/material";
 import { useAppDispatch } from "@store";
 import { SupplierActions } from "@store/supplier";
 
-export const SuplierToolbar = () => {
+export const SupplierToolbar = () => {
   const dispatch = useAppDispatch();
   const handleAdd = () => {
     dispatch(

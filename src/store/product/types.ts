@@ -6,8 +6,8 @@ export type ProductFilter = BaseFilter & {
   id?: string;
   name?: string;
   color?: string;
-  suplierId?: string;
-  suplierDisplay?: string;
+  supplierId?: string;
+  supplierDisplay?: string;
   createdAtTo?: number;
   createdAtFrom?: number;
 };

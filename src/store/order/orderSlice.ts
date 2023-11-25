@@ -60,6 +60,22 @@ const orderSlice = createSlice({
         state.table.loading = false;
       });
 
+    builder
+      .addCase(OrderThunks.statisticSearch.pending, (state, action) => {
+        state.table.loading = true;
+        if (!action.meta.arg.orderFilter) state.filter = initialState.filter;
+        else state.filter = { ...action.meta.arg.orderFilter };
+      })
+      .addCase(OrderThunks.statisticSearch.fulfilled, (state, action) => {
+        state.orders = action.payload.records;
+        state.totalOrder = action.payload.totalRecord;
+        state.filter.page = action.payload.pageCurrent;
+        state.table.loading = false;
+      })
+      .addCase(OrderThunks.statisticSearch.rejected, (state) => {
+        state.table.loading = false;
+      });
+
     builder.addCase(OrderThunks.update.fulfilled, (state, action) => {
       state.form = { open: false, order: null };
       state.orders = state.orders.map((c) => {

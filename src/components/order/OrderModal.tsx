@@ -3,16 +3,17 @@ import { OrderForm } from "./OrderForm";
 import { useAppDispatch, useAppSelector } from "@store";
 import { UserActions, UserSelectors } from "@store/user";
 import { CategoryActions, CategorySelectors } from "@store/category";
+import { OrderActions, OrderSelectors } from "@store/order";
 
 export const OrderModal = () => {
-  const { open, category } = useAppSelector(CategorySelectors.getForm());
+  const { open, order } = useAppSelector(OrderSelectors.getForm());
   const dispatch = useAppDispatch();
 
   const handleClose = () => {
     dispatch(
-      CategoryActions.setForm({
+      OrderActions.setForm({
         open: false,
-        category: null,
+        order: null,
       })
     );
   };
@@ -21,14 +22,13 @@ export const OrderModal = () => {
     <DialogCustom
       open={open}
       onClose={handleClose}
-      title={!category ? "Thêm mới loại sản phẩm" : "Chỉnh sửa thông tin loại sản phẩm"}
-      subTitle={"Nhập thông tin vào các ô tương ứng"}
+      title={"Chi tiết đơn hàng"}
       style={{
         dialog: {
-          "& .MuiDialog-paperScrollBody": { maxWidth: "600px" },
+          "& .MuiDialog-paperScrollBody": { maxWidth: "1000px" },
         },
         dialogContent: {
-          width: { lg: "600px" },
+          width: { lg: "1000px" },
         },
       }}
     >

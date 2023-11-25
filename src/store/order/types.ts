@@ -3,7 +3,6 @@ import { BaseFilter } from "@types";
 
 export type OrderFilter = BaseFilter & {
   id?: string;
-  name?: string;
   createdAtTo?: number;
   createdAtFrom?: number;
 };

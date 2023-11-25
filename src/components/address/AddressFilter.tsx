@@ -2,17 +2,17 @@ import React from "react";
 import { useAppDispatch, useAppSelector } from "@store";
 import { FilterAdvance, FilterAdvanceSearchItemOptions } from "@components/_common/FilterAdvance";
 import { SearchType } from "@types";
-import { OrderSelectors, OrderThunks } from "@store/order";
+import { AddressSelectors, AddressThunks } from "@store/address";
 
-export const OrderFilter: React.FC = () => {
-  const filter = useAppSelector(OrderSelectors.getFilter());
+export const AddressFilter: React.FC = () => {
+  const filter = useAppSelector(AddressSelectors.getFilter());
 
   const dispatch = useAppDispatch();
 
   const handleSearch = (value: string) => {
     dispatch(
-      OrderThunks.search({
-        orderFilter: {
+      AddressThunks.search({
+        addressFilter: {
           page: 1,
           pageSize: filter.pageSize,
         },
@@ -22,8 +22,8 @@ export const OrderFilter: React.FC = () => {
 
   const handleSearchAdvance = (values) => {
     dispatch(
-      OrderThunks.search({
-        orderFilter: {
+      AddressThunks.search({
+        addressFilter: {
           ...values,
           searchType: SearchType.ADVANCED,
           page: 1,
@@ -33,7 +33,7 @@ export const OrderFilter: React.FC = () => {
   };
 
   function handleReset() {
-    dispatch(OrderThunks.search({}));
+    dispatch(AddressThunks.search({}));
   }
 
   return (
@@ -42,21 +42,21 @@ export const OrderFilter: React.FC = () => {
       onSearchAdvance={handleSearchAdvance}
       onReset={handleReset}
       searchItem={{
-        label: "Tìm kiếm đơn hàng",
-        placeholder: "Nhập mã đơn, tên khách hàng... ",
+        label: "Tìm kiếm loại sản phẩm",
+        placeholder: "Nhập mã loại sản phẩm, tên loại sản phẩm,... ",
       }}
       searchItemAdvances={[
         {
           field: "id",
           type: "text",
-          label: "Mã đơn",
+          label: "Mã loại sản phẩm",
           placeholder: "Ví dụ: 0001",
         },
         {
-          field: "fullName",
+          field: "name",
           type: "text",
-          label: "Tên khách hàng",
-          placeholder: "Ví dụ: Nguyễn A",
+          label: "Tên loại sản phẩm",
+          placeholder: "Ví dụ: Burger gà",
         },
         {
           field: "createdAtFrom",

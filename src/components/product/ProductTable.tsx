@@ -9,6 +9,7 @@ import { ProductActions, ProductSelectors, ProductThunks } from "@store/product"
 import { Product } from "@services/product";
 import { formatMoney } from "@utils/DateFormat";
 import { Stack } from "@mui/system";
+import { useEffect } from "react";
 
 export const ProductTable: React.FC = () => {
   const { products, totalProduct } = useAppSelector(ProductSelectors.getAll());
@@ -16,7 +17,9 @@ export const ProductTable: React.FC = () => {
   const table = useAppSelector(ProductSelectors.getTable());
 
   const dispatch = useAppDispatch();
-
+  useEffect(() => {
+    console.log("product ne", products);
+  }, [products]);
   const handleEdit = (product: Product) => {
     dispatch(
       ProductActions.setForm({
@@ -129,10 +132,10 @@ export const ProductTable: React.FC = () => {
             valueGetter: (params) => params.row.category.name,
           },
           {
-            field: "suplier",
+            field: "supplier",
             headerName: "Nhà cung cấp",
             type: "object",
-            valueGetter: (params) => params.row.suplier.name,
+            valueGetter: (params) => params.row.supplier.name,
             minWidth: 200,
           },
           {

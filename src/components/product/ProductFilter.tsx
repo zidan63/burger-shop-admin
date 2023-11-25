@@ -67,7 +67,7 @@ export const ProductFilter: React.FC = () => {
           placeholder: "Ví dụ: 30000",
         },
         {
-          field: "suplierId",
+          field: "supplierId",
           type: "options",
           label: "Nhà cung cấp",
           placeholder: "Ví dụ: Công ty A",

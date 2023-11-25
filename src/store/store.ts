@@ -11,13 +11,17 @@ import { productSlice } from "./product";
 import { supplierSlice } from "./supplier";
 import { categorySlice } from "./category";
 import { colorSlice } from "./color";
+import { orderSlice } from "./order";
+import { addressSlice } from "./address";
 
 const rootReducer = combineReducers({
   auth: authSlice.reducer,
   user: userSlice.reducer,
   category: categorySlice.reducer,
   color: colorSlice.reducer,
+  order: orderSlice.reducer,
   product: productSlice.reducer,
+  address: addressSlice.reducer,
   supplier: supplierSlice.reducer,
   role: roleSlice.reducer,
 });

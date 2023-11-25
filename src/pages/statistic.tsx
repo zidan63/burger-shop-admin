@@ -4,15 +4,13 @@ import { useEffect } from "react";
 import { Box, Stack } from "@mui/material";
 
 import { OrderModal } from "@components/order/OrderModal";
-import { OrderTable } from "@components/order/OrderTable";
+import { StatisticTable } from "@components/statistic/StatisticTable";
 import { OrderFilter } from "@components/order/OrderFilter";
-import { OrderToolbar } from "@components/order/OrderToolbar";
 import { DashboardLayout } from "@layouts/dashboard/DashboardLayout";
 
 import { useAppDispatch } from "@store";
-import { RoleThunks } from "@store/role";
-import { SearchType } from "@types";
 import { OrderThunks } from "@store/order";
+import { StatisticToolbar } from "@components/statistic/StatisticToolbar";
 
 const Page = () => {
   const dispatch = useAppDispatch();
@@ -23,10 +21,9 @@ const Page = () => {
 
   return (
     <Stack gap={2}>
-      <OrderToolbar />
-      <OrderFilter />
-      <OrderTable />
-      <OrderModal />
+      <StatisticToolbar />
+      <StatisticTable />
+      {/* <OrderModal /> */}
     </Stack>
   );
 };

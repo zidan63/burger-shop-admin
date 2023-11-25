@@ -9,7 +9,7 @@ import { ButtonCustom } from "@components/_common/ButtonCustom";
 
 import { NotificationUtil } from "@utils/NotificationUtil";
 
-import { SuplierSelectors, SuplierThunks } from "@store/supplier";
+import { SupplierSelectors, SupplierThunks } from "@store/supplier";
 
 const validationSchema = Yup.object().shape({
   code: Yup.string()
@@ -30,14 +30,14 @@ const validationSchema = Yup.object().shape({
     .max(30, "Địa chỉ tối đa 30 kí tự!"),
 });
 
-export const SuplierForm: React.FC = () => {
-  const { suplier } = useAppSelector(SuplierSelectors.getForm());
+export const SupplierForm: React.FC = () => {
+  const { supplier } = useAppSelector(SupplierSelectors.getForm());
 
   const dispatch = useAppDispatch();
 
   const formik = useFormik({
-    initialValues: suplier
-      ? suplier
+    initialValues: supplier
+      ? supplier
       : {
           code: "",
           name: "",
@@ -47,23 +47,23 @@ export const SuplierForm: React.FC = () => {
     validationSchema: validationSchema,
     validateOnChange: false,
     onSubmit: (values) => {
-      if (suplier !== null) return handleUpdateSuplier(values);
-      else handleCreateSuplier(values);
+      if (supplier !== null) return handleUpdateSupplier(values);
+      else handleCreateSupplier(values);
     },
   });
 
-  const handleCreateSuplier = async (values) => {
-    const result = await dispatch(SuplierThunks.create(values));
-    if (SuplierThunks.create.rejected.match(result)) return formik.setSubmitting(false);
+  const handleCreateSupplier = async (values) => {
+    const result = await dispatch(SupplierThunks.create(values));
+    if (SupplierThunks.create.rejected.match(result)) return formik.setSubmitting(false);
 
     NotificationUtil.success("Đã thêm nhà cung cấp thành công");
     formik.resetForm();
   };
 
-  const handleUpdateSuplier = async (values) => {
-    if (!suplier) return;
-    const result = await dispatch(SuplierThunks.update(values));
-    if (SuplierThunks.update.rejected.match(result)) return formik.setSubmitting(false);
+  const handleUpdateSupplier = async (values) => {
+    if (!supplier) return;
+    const result = await dispatch(SupplierThunks.update(values));
+    if (SupplierThunks.update.rejected.match(result)) return formik.setSubmitting(false);
     NotificationUtil.success("Đã chỉnh sửa nhà cung cấp thành công");
   };
 
@@ -147,7 +147,7 @@ export const SuplierForm: React.FC = () => {
         <ButtonCustom
           disabled={!formik.dirty || formik.isSubmitting}
           type="submit"
-          title={formik.isSubmitting ? "Đang xử lý..." : !suplier ? "Thêm mới" : "Lưu"}
+          title={formik.isSubmitting ? "Đang xử lý..." : !supplier ? "Thêm mới" : "Lưu"}
         />
       </Box>
     </Box>

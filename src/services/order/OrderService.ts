@@ -5,15 +5,21 @@ import { SearchResult } from "@types";
 
 class OrderService {
   async search(orderFilter?: OrderFilter) {
-    return HttpRequest.get<SearchResult<Order>>(`/categories`, orderFilter);
+    return HttpRequest.get<SearchResult<Order>>(`/orders`, orderFilter);
+  }
+  async statisticSearch(orderFilter?: OrderFilter) {
+    return HttpRequest.get<SearchResult<Order>>(`/search/orders`, orderFilter);
+  }
+  async(orderFilter?: OrderFilter) {
+    return HttpRequest.get<SearchResult<Order>>(`/orders`, orderFilter);
   }
 
-  async update(_order: Order) {
-    return HttpRequest.put<Order>(`/categories`, _order);
+  async update(order: Partial<Order>) {
+    return HttpRequest.put<Order>(`/orders`, order);
   }
 
   async delete(id: string) {
-    return HttpRequest.delete(`/categories?id=${id}`);
+    return HttpRequest.delete(`/orders?id=${id}`);
   }
 }
 
