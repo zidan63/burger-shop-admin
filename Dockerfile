@@ -31,6 +31,6 @@ COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
 
 USER nextjs
-ENV hostname localhost
+ENV HOSTNAME localhost
 
 CMD ["node", "server.js"]
