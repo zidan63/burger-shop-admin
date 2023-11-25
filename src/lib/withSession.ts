@@ -1,6 +1,7 @@
-import { User } from "@services/user";
-import { withIronSessionApiRoute, withIronSessionSsr } from "iron-session/next";
 import { GetServerSidePropsContext, GetServerSidePropsResult, NextApiHandler } from "next";
+import { withIronSessionApiRoute, withIronSessionSsr } from "iron-session/next";
+
+import { User } from "@services/user";
 
 const sessionOptions = {
   cookieName: "myapp_cookiename",
@@ -10,7 +11,7 @@ const sessionOptions = {
   },
 
   cookieOptions: {
-    secure: process.env.NODE_ENV === "production",
+    secure: false,
   },
   ttl: 24 * 60 * 60,
 };

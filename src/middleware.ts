@@ -14,7 +14,7 @@ export const middleware = async (req: NextRequest) => {
       },
 
       cookieOptions: {
-        secure: process.env.NODE_ENV === "production",
+        secure: false,
       },
       ttl: 24 * 60 * 60,
     });
