@@ -71,7 +71,7 @@ export const ToppingTable: React.FC = () => {
                 <Stack direction={"row"}>
                   <Box
                     sx={{
-                      backgroundTopping: code,
+                      backgroundColor: code,
                       width: 20,
                       height: 20,
                       borderRadius: 20,
@@ -110,7 +110,7 @@ export const ToppingTable: React.FC = () => {
             icon: <Delete />,
             handleClick: (row) => handleRemoveOneTopping(row),
             style: {
-              topping: "#dc3545",
+              color: "#dc3545",
             },
           },
         ]}
