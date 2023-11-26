@@ -1,22 +1,23 @@
-import HeaderCustom from "@components/_common/HeaderCustom/HeaderCustom";
-import AddIcon from "@mui/icons-material/Add";
 import { Box, Button } from "@mui/material";
-import { useAppDispatch } from "@store";
-import { ColorActions } from "@store/color";
 
-export const ColorToolbar = () => {
+import AddIcon from "@mui/icons-material/Add";
+import HeaderCustom from "@components/_common/HeaderCustom/HeaderCustom";
+import { ToppingActions } from "@store/topping";
+import { useAppDispatch } from "@store";
+
+export const ToppingToolbar = () => {
   const dispatch = useAppDispatch();
   const handleAdd = () => {
     dispatch(
-      ColorActions.setForm({
+      ToppingActions.setForm({
         open: true,
-        color: null,
+        topping: null,
       })
     );
   };
 
   return (
-    <HeaderCustom title="Quản lý màu">
+    <HeaderCustom title="Quản lý topping">
       <Box>
         <Button
           color="primary"
@@ -24,7 +25,7 @@ export const ColorToolbar = () => {
           onClick={() => handleAdd()}
           startIcon={<AddIcon />}
         >
-          Thêm màu
+          Thêm topping
         </Button>
       </Box>
     </HeaderCustom>

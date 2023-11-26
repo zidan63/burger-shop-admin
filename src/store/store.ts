@@ -1,24 +1,23 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
+
 import { TypedUseSelectorHook } from "react-redux";
-import { useSelector } from "react-redux";
-
-import { useDispatch } from "react-redux";
-import { userSlice } from "./user";
-import { roleSlice } from "./role";
-
-import { authSlice } from "./auth";
-import { productSlice } from "./product";
-import { supplierSlice } from "./supplier";
-import { categorySlice } from "./category";
-import { colorSlice } from "./color";
-import { orderSlice } from "./order";
 import { addressSlice } from "./address";
+import { authSlice } from "./auth";
+import { categorySlice } from "./category";
+import { orderSlice } from "./order";
+import { productSlice } from "./product";
+import { roleSlice } from "./role";
+import { supplierSlice } from "./supplier";
+import { toppingSlice } from "./topping";
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+import { userSlice } from "./user";
 
 const rootReducer = combineReducers({
   auth: authSlice.reducer,
   user: userSlice.reducer,
   category: categorySlice.reducer,
-  color: colorSlice.reducer,
+  topping: toppingSlice.reducer,
   order: orderSlice.reducer,
   product: productSlice.reducer,
   address: addressSlice.reducer,

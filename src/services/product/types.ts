@@ -1,8 +1,8 @@
-import { Category } from "@services/category";
-import { Color } from "@services/color";
-import { Supplier } from "@services/supplier";
-import { User } from "@services/user";
 import { BaseRecord } from "@types";
+import { Category } from "@services/category";
+import { Supplier } from "@services/supplier";
+import { Topping } from "@services/topping";
+import { User } from "@services/user";
 
 export type Product = BaseRecord & {
   name: string;
@@ -11,7 +11,7 @@ export type Product = BaseRecord & {
   stock: number;
   description: string;
   imageName: string;
-  colors: Color[];
+  toppings: Topping[];
   supplier: Supplier;
   category: Category;
   user: User;

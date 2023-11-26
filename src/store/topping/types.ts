@@ -1,7 +1,7 @@
-import { Color } from "@services/color";
 import { BaseFilter } from "@types";
+import { Topping } from "@services/topping";
 
-export type ColorFilter = BaseFilter & {
+export type ToppingFilter = BaseFilter & {
   id?: string;
   code?: string;
   name?: string;
@@ -9,7 +9,7 @@ export type ColorFilter = BaseFilter & {
   createdAtFrom?: number;
 };
 
-export type ColorForm = {
+export type ToppingForm = {
   open: boolean;
-  color: Color | null;
+  topping: Topping | null;
 };

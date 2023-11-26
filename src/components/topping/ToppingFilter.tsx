@@ -1,18 +1,19 @@
-import React from "react";
-import { useAppDispatch, useAppSelector } from "@store";
 import { FilterAdvance, FilterAdvanceSearchItemOptions } from "@components/_common/FilterAdvance";
-import { SearchType } from "@types";
-import { ColorSelectors, ColorThunks } from "@store/color";
+import { ToppingSelectors, ToppingThunks } from "@store/topping";
+import { useAppDispatch, useAppSelector } from "@store";
 
-export const ColorFilter: React.FC = () => {
-  const filter = useAppSelector(ColorSelectors.getFilter());
+import React from "react";
+import { SearchType } from "@types";
+
+export const ToppingFilter: React.FC = () => {
+  const filter = useAppSelector(ToppingSelectors.getFilter());
 
   const dispatch = useAppDispatch();
 
   const handleSearch = (value: string) => {
     dispatch(
-      ColorThunks.search({
-        colorFilter: {
+      ToppingThunks.search({
+        toppingFilter: {
           page: 1,
           pageSize: filter.pageSize,
         },
@@ -22,8 +23,8 @@ export const ColorFilter: React.FC = () => {
 
   const handleSearchAdvance = (values) => {
     dispatch(
-      ColorThunks.search({
-        colorFilter: {
+      ToppingThunks.search({
+        toppingFilter: {
           ...values,
           searchType: SearchType.ADVANCED,
           page: 1,
@@ -33,7 +34,7 @@ export const ColorFilter: React.FC = () => {
   };
 
   function handleReset() {
-    dispatch(ColorThunks.search({}));
+    dispatch(ToppingThunks.search({}));
   }
 
   return (
@@ -42,20 +43,20 @@ export const ColorFilter: React.FC = () => {
       onSearchAdvance={handleSearchAdvance}
       onReset={handleReset}
       searchItem={{
-        label: "Tìm kiếm màu",
-        placeholder: "Nhập mã màu, tên màu,... ",
+        label: "Tìm kiếm topping",
+        placeholder: "Nhập mã topping, tên topping,... ",
       }}
       searchItemAdvances={[
         {
           field: "code",
           type: "text",
-          label: "Mã màu",
+          label: "Mã màu topping",
           placeholder: "Ví dụ: #00000",
         },
         {
           field: "name",
           type: "text",
-          label: "Tên màu",
+          label: "Tên topping",
           placeholder: "Ví dụ: Màu xám",
         },
         {

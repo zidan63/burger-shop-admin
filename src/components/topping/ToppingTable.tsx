@@ -1,40 +1,41 @@
-import { Box } from "@mui/material";
-import { useAppDispatch, useAppSelector } from "@store";
-import { DataGridCustom } from "@components/_common/DataGridCustom";
 import { Delete, Edit } from "@mui/icons-material";
-import { NotificationUtil } from "@utils/NotificationUtil";
-import { ColorActions, ColorSelectors, ColorThunks } from "@store/color";
-import { Color } from "@services/color";
-import { Stack } from "@mui/system";
+import { ToppingActions, ToppingSelectors, ToppingThunks } from "@store/topping";
+import { useAppDispatch, useAppSelector } from "@store";
 
-export const ColorTable: React.FC = () => {
-  const { colors, totalColor } = useAppSelector(ColorSelectors.getAll());
-  const filter = useAppSelector(ColorSelectors.getFilter());
-  const table = useAppSelector(ColorSelectors.getTable());
+import { Box } from "@mui/material";
+import { DataGridCustom } from "@components/_common/DataGridCustom";
+import { NotificationUtil } from "@utils/NotificationUtil";
+import { Stack } from "@mui/system";
+import { Topping } from "@services/topping";
+
+export const ToppingTable: React.FC = () => {
+  const { toppings, totalTopping } = useAppSelector(ToppingSelectors.getAll());
+  const filter = useAppSelector(ToppingSelectors.getFilter());
+  const table = useAppSelector(ToppingSelectors.getTable());
 
   const dispatch = useAppDispatch();
 
-  const handleEdit = (color: Color) => {
+  const handleEdit = (topping: Topping) => {
     dispatch(
-      ColorActions.setForm({
+      ToppingActions.setForm({
         open: true,
-        color: color,
+        topping: topping,
       })
     );
   };
 
-  const handleRemoveOneColor = async (color: Color) => {
-    const isAccept = await NotificationUtil.warning(`Bạn có chắc chắn muốn xóa màu này ?`);
+  const handleRemoveOneTopping = async (topping: Topping) => {
+    const isAccept = await NotificationUtil.warning(`Bạn có chắc chắn muốn xóa topping này ?`);
     if (!isAccept) return;
-    const result = await dispatch(ColorThunks.delete(color.id));
-    if (ColorThunks.delete.rejected.match(result)) return;
-    NotificationUtil.success("Đã xóa màu thành công");
+    const result = await dispatch(ToppingThunks.delete(topping.id));
+    if (ToppingThunks.delete.rejected.match(result)) return;
+    NotificationUtil.success("Đã xóa topping thành công");
   };
 
   const handlePageChange = async (page) => {
     dispatch(
-      ColorThunks.search({
-        colorFilter: {
+      ToppingThunks.search({
+        toppingFilter: {
           ...filter,
           page,
         },
@@ -44,8 +45,8 @@ export const ColorTable: React.FC = () => {
 
   const handlePageSizeChange = (pageSize) => {
     dispatch(
-      ColorThunks.search({
-        colorFilter: {
+      ToppingThunks.search({
+        toppingFilter: {
           ...filter,
           pageSize,
           page: 1,
@@ -58,11 +59,11 @@ export const ColorTable: React.FC = () => {
     <Box>
       <DataGridCustom
         loading={table.loading}
-        rowsData={colors}
+        rowsData={toppings}
         columnsData={[
           {
             field: "code",
-            headerName: "Mã màu",
+            headerName: "Mã màu topping",
             type: "text",
             renderCell(params) {
               const code = params.row.code;
@@ -70,7 +71,7 @@ export const ColorTable: React.FC = () => {
                 <Stack direction={"row"}>
                   <Box
                     sx={{
-                      backgroundColor: code,
+                      backgroundTopping: code,
                       width: 20,
                       height: 20,
                       borderRadius: 20,
@@ -84,7 +85,7 @@ export const ColorTable: React.FC = () => {
           },
           {
             field: "name",
-            headerName: "Tên màu",
+            headerName: "Tên topping",
             type: "text",
           },
           {
@@ -107,16 +108,16 @@ export const ColorTable: React.FC = () => {
           {
             label: "Xóa",
             icon: <Delete />,
-            handleClick: (row) => handleRemoveOneColor(row),
+            handleClick: (row) => handleRemoveOneTopping(row),
             style: {
-              color: "#dc3545",
+              topping: "#dc3545",
             },
           },
         ]}
         pagination={{
           page: filter.page,
           pageSize: filter.pageSize,
-          totalRecord: totalColor,
+          totalRecord: totalTopping,
           onPageChange: handlePageChange,
           onPageSizeChange: handlePageSizeChange,
         }}

@@ -1,26 +1,26 @@
-import { useRef } from "react";
+import * as Yup from "yup";
+
 import { Autocomplete, Box, Checkbox, Chip, Divider, Grid, TextField } from "@mui/material";
-import { useFormik } from "formik";
+import { ProductSelectors, ProductThunks } from "@store/product";
+import React, { useMemo } from "react";
 import { useAppDispatch, useAppSelector } from "@store";
 
-import { TextFieldCustom } from "@components/_common/TextFieldCustom";
-import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
-import CheckBoxIcon from "@mui/icons-material/CheckBox";
-import React, { useMemo } from "react";
-import * as Yup from "yup";
 import { ButtonCustom } from "@components/_common/ButtonCustom";
-
-import { NotificationUtil } from "@utils/NotificationUtil";
-import { ProductSelectors, ProductThunks } from "@store/product";
-import { SupplierSelectors } from "@store/supplier";
-import { Supplier } from "@services/supplier";
-import { Color } from "@services/color";
-import { CategorySelectors } from "@store/category";
 import { Category } from "@services/category";
-import { ColorSelectors } from "@store/color";
-import { Stack } from "@mui/system";
+import { CategorySelectors } from "@store/category";
+import CheckBoxIcon from "@mui/icons-material/CheckBox";
+import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
 import { ImageUploadComp } from "@components/_common/ImageUpload";
+import { NotificationUtil } from "@utils/NotificationUtil";
+import { Stack } from "@mui/system";
+import { Supplier } from "@services/supplier";
+import { SupplierSelectors } from "@store/supplier";
+import { TextFieldCustom } from "@components/_common/TextFieldCustom";
+import { Topping } from "@services/topping";
+import { ToppingSelectors } from "@store/topping";
 import { fileService } from "@services/file/FileService";
+import { useFormik } from "formik";
+import { useRef } from "react";
 
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
@@ -47,7 +47,7 @@ export const ProductForm: React.FC = () => {
   const { product } = useAppSelector(ProductSelectors.getForm());
   const { categories } = useAppSelector(CategorySelectors.getAll());
   const { suppliers } = useAppSelector(SupplierSelectors.getAll());
-  const { colors } = useAppSelector(ColorSelectors.getAll());
+  const { toppings } = useAppSelector(ToppingSelectors.getAll());
   const imageUploadBoxRef = useRef<any>(null);
 
   const dispatch = useAppDispatch();
@@ -62,7 +62,7 @@ export const ProductForm: React.FC = () => {
           stock: 10,
           description: "",
           imageName: "",
-          colors: [] as Color[],
+          toppings: [] as Topping[],
           supplier: null,
           category: null,
         },
@@ -88,10 +88,10 @@ export const ProductForm: React.FC = () => {
     return categories.find((s) => formik.values.category?.id === s.id);
   }, [categories, formik.values.category]);
 
-  const colorsSelected = useMemo(() => {
-    const colorIds = formik.values.colors.map((c) => c.id);
-    return colors.filter((s) => colorIds.includes(s.id));
-  }, [colors, formik.values.colors]);
+  const toppingsSelected = useMemo(() => {
+    const colorIds = formik.values.toppings.map((c) => c.id);
+    return toppings.filter((s) => colorIds.includes(s.id));
+  }, [toppings, formik.values.toppings]);
 
   const handleUploadFile = async (file) => {
     const formData = new FormData();
@@ -123,8 +123,8 @@ export const ProductForm: React.FC = () => {
     formik.setFieldValue("category", value);
   };
 
-  const handleColorChange = (value: Color[]) => {
-    formik.setFieldValue("colors", value);
+  const handleToppingChange = (value: Topping[]) => {
+    formik.setFieldValue("toppings", value);
   };
 
   return (
@@ -275,10 +275,10 @@ export const ProductForm: React.FC = () => {
           <Autocomplete
             multiple
             id="muti-select-color"
-            options={colors}
-            value={colorsSelected}
+            options={toppings}
+            value={toppingsSelected}
             onChange={(e, values) => {
-              handleColorChange(values);
+              handleToppingChange(values);
             }}
             ListboxProps={{
               style: {
@@ -296,7 +296,7 @@ export const ProductForm: React.FC = () => {
                   avatar={
                     <Box
                       sx={{
-                        backgroundColor: option.code,
+                        backgroundTopping: option.code,
                         width: 20,
                         height: 20,
                         borderRadius: 20,
@@ -318,7 +318,7 @@ export const ProductForm: React.FC = () => {
                 <Stack direction={"row"}>
                   <Box
                     sx={{
-                      backgroundColor: option.code,
+                      backgroundTopping: option.code,
                       width: 20,
                       height: 20,
                       borderRadius: 20,
@@ -332,10 +332,10 @@ export const ProductForm: React.FC = () => {
             renderInput={(params) => (
               <TextField
                 {...params}
-                label="Màu sắc"
-                placeholder="Nhập mã màu, tên màu..."
-                error={!!formik.errors.colors}
-                helperText={formik.errors.colors}
+                label="Topping"
+                placeholder="Nhập mã topping, tên topping..."
+                error={!!formik.errors.toppings}
+                helperText={formik.errors.toppings}
               />
             )}
           />
