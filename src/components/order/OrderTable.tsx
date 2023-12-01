@@ -105,7 +105,7 @@ export const OrderTable: React.FC = () => {
           {
             field: "fullName",
             headerName: "Người mua",
-            valueGetter: (param) => param.row.address.fullName,
+            valueGetter: (param) => param.row.user.fullName,
             type: "text",
           },
           {
@@ -123,11 +123,6 @@ export const OrderTable: React.FC = () => {
           {
             field: "createdAt",
             headerName: "Ngày tạo",
-            type: "date",
-          },
-          {
-            field: "updatedAt",
-            headerName: "Ngày chỉnh sửa",
             type: "date",
           },
         ]}

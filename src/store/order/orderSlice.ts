@@ -51,7 +51,7 @@ const orderSlice = createSlice({
         else state.filter = { ...action.meta.arg.orderFilter };
       })
       .addCase(OrderThunks.search.fulfilled, (state, action) => {
-        state.orders = action.payload.records;
+        state.orders = action?.payload?.records;
         state.totalOrder = action.payload.totalRecord;
         state.filter.page = action.payload.pageCurrent;
         state.table.loading = false;
