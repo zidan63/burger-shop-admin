@@ -1,23 +1,32 @@
-import { Box, Tab } from "@mui/material";
-import { TabContext, TabList, TabPanel } from "@mui/lab";
-import { useEffect, useState } from "react";
-import { OrderSelectors, OrderThunks } from "@store/order";
-import { useAppDispatch, useAppSelector } from "@store";
-import { Bar } from "react-chartjs-2";
-import _ from "lodash";
 import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
   BarElement,
+  CategoryScale,
+  Chart as ChartJS,
+  Legend,
+  LinearScale,
   Title,
   Tooltip,
-  Legend,
 } from "chart.js";
-import { SearchType } from "@types";
+import { Box, Grid, Stack, Tab } from "@mui/material";
+import { OrderSelectors, OrderThunks } from "@store/order";
+import { TabContext, TabList, TabPanel } from "@mui/lab";
 import { getDatesThisWeekDates, getTimeThisWeekDates, listMonths } from "@utils/DateUtil";
+import { useAppDispatch, useAppSelector } from "@store";
+import { useEffect, useRef, useState } from "react";
+
+import { Bar } from "react-chartjs-2";
+import { ButtonCustom } from "@components/_common/ButtonCustom";
+import { CardCustom } from "@components/_common/CardCustom";
+import { DateTimePickerCustom } from "@components/_common/DateTimePickerCustom";
+import { FilterAdvance } from "@components/_common/FilterAdvance";
+import ReplayIcon from "@mui/icons-material/Replay";
+import SearchIcon from "@mui/icons-material/Search";
+import { SearchType } from "@types";
+import { TextFieldCustom } from "@components/_common/TextFieldCustom";
+import _ from "lodash";
 import { log } from "console";
 import moment from "moment";
+
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 type Result = {
   totalMoneyEach: number[];
@@ -25,15 +34,28 @@ type Result = {
 };
 export const StatisticTable: React.FC = () => {
   const [value, setValue] = useState("1");
+  const handleFuncRefs = useRef<any>({});
+  const dateHandler = useRef<any>((field: string) => {
+    const ref = {
+      current: undefined,
+    };
+    handleFuncRefs.current[field] = ref;
+    return ref;
+  });
   const { orders, totalOrder } = useAppSelector(OrderSelectors.getAll());
+  const [listDates, setListDates] = useState<string[]>([]);
   const [top5Clients, setClients] = useState<string[]>([]);
   const [top5Employees, setEmployees] = useState<string[]>([]);
   const [top5Products, setProducts] = useState<string[]>([]);
   const [resultByWeekday, setResultByWeekday] = useState<Result>({
-    totalMoneyEach: [0, 0, 0, 0, 0, 0, 0],
-    amountProductEach: [0, 0, 0, 0, 0, 0, 0],
+    totalMoneyEach: [],
+    amountProductEach: [],
   });
   const [resultByMonth, setResultByMonth] = useState<Result>({
+    totalMoneyEach: [],
+    amountProductEach: [],
+  });
+  const [resultByRange, setResultByRange] = useState<Result>({
     totalMoneyEach: [],
     amountProductEach: [],
   });
@@ -54,6 +76,7 @@ export const StatisticTable: React.FC = () => {
     switch (newValue) {
       case "1": {
         const listDates = getTimeThisWeekDates();
+        console.log(listDates);
 
         const filter = {
           searchType: SearchType.ADVANCED,
@@ -61,6 +84,7 @@ export const StatisticTable: React.FC = () => {
           createdAtFrom: listDates[0],
           createdAtTo: listDates[listDates.length - 1],
         };
+
         dispatch(
           OrderThunks.statisticSearch({
             orderFilter: filter,
@@ -103,6 +127,9 @@ export const StatisticTable: React.FC = () => {
       case "5": {
         dispatch(OrderThunks.search({}));
       }
+      case "6": {
+        dispatch(OrderThunks.search({}));
+      }
 
       default:
         break;
@@ -115,27 +142,35 @@ export const StatisticTable: React.FC = () => {
   }, [value]);
 
   useEffect(() => {
+    console.log(orders);
+
     if (orders && orders.length > 0) {
       console.log(value);
 
       switch (value) {
         case "1": {
-          // console.log(orders);
+          console.log("Thu", orders);
           // alert("handl 1");
           const dates: number[] = getDatesThisWeekDates();
+          console.log("Date 1 ne", dates);
+
           const result: Result = {
             amountProductEach: [],
             totalMoneyEach: [],
           };
 
-          for (let i = dates[0]; i <= dates[dates.length - 1]; i++) {
+          for (let i = 0; i <= 6; i++) {
             let tempTotalMoney = 0,
               tempTotalProduct = 0;
+
             orders.forEach((order) => {
               const dateTime = new Date(order.createdAt);
               const date = dateTime.getDate();
               const weekDay = dateTime.getDay();
-              if (date == i) {
+              // console.log("Date ne", date);
+              console.log(dateTime);
+
+              if (date == dates[i]) {
                 order.billDetails.forEach((billDetail) => {
                   tempTotalMoney += billDetail.amount * billDetail.priceSaleBill;
                   tempTotalProduct += billDetail.amount;
@@ -332,13 +367,105 @@ export const StatisticTable: React.FC = () => {
           setResultTop5Products(result);
           break;
         }
+        case "6": {
+          let result: Result = {
+            amountProductEach: [],
+            totalMoneyEach: [],
+          };
+
+          let listProduct: Set<string> = new Set();
+          orders.forEach((order) => {
+            order.billDetails.forEach((billDetail) => {
+              listProduct.add(billDetail.product.name);
+            });
+          });
+          let index = 0;
+          listProduct.forEach((product) => {
+            let tempTotalMoney = 0,
+              tempAmountProduct = 0;
+            orders.forEach((order) => {
+              order.billDetails.forEach((billDetail) => {
+                if (billDetail.product.name === product) {
+                  tempTotalMoney += billDetail.amount * billDetail.priceSaleBill;
+                  tempAmountProduct += billDetail.amount;
+                }
+              });
+              result.amountProductEach[index] = tempAmountProduct;
+              result.totalMoneyEach[index] = tempTotalMoney;
+            });
+            index++;
+          });
+          let _listProduct = Array.from(listProduct);
+          let list: any = [];
+          for (let j = 0; j < result.amountProductEach.length; j++)
+            list.push({
+              amountProductEach: result.amountProductEach[j],
+              totalMoneyEach: result.totalMoneyEach[j],
+              listProduct: _listProduct[j],
+            });
+          list.sort(function (a, b) {
+            return a.amountProductEach > b.amountProductEach;
+          });
+          for (let k = 0; k < list.length; k++) {
+            _.set(result, `totalMoneyEach[${k}]`, list[k].totalMoneyEach);
+            _.set(result, `amountProductEach[${k}]`, list[k].amountProductEach);
+            _listProduct[k] = list[k].listProduct;
+          }
+          setProducts(_listProduct);
+          setResultTop5Products(result);
+          break;
+        }
         default:
           break;
       }
     }
   }, [orders]);
 
-  const handleSearchAdvance = (values) => {};
+  const handleSearchAdvance = (e) => {
+    e.preventDefault();
+    let result: Result = {
+      amountProductEach: [],
+      totalMoneyEach: [],
+    };
+    let createdAtFrom = handleFuncRefs.current["createdAtFrom"]?.current?.getValue()?.getTime();
+    let createdAtTo =
+      handleFuncRefs.current["createdAtTo"]?.current?.getValue()?.getTime() || Date.now();
+    if (createdAtFrom && createdAtTo) {
+      let listDates: string[] = [];
+      for (
+        let d = new Date(createdAtFrom);
+        d <= new Date(createdAtTo);
+        d.setDate(d.getDate() + 1)
+      ) {
+        let month = d.getMonth();
+        let date = d.getDate();
+        let year = d.getFullYear();
+        let col = `${date}/${month}/${year}`;
+        listDates.push(`${date}/${month + 1}/${year}`);
+        let amount = 0;
+        let totalMoney = 0;
+        orders.forEach((order) => {
+          let dateOrder = new Date(order.createdAt);
+          let month = dateOrder.getMonth();
+          let date = dateOrder.getDate();
+          let year = dateOrder.getFullYear();
+          let dateOrderFull = `${date}/${month}/${year}`;
+
+          if (dateOrderFull == col) {
+            order.billDetails.forEach((billDetail) => {
+              amount += billDetail.amount;
+              totalMoney += billDetail.amount * billDetail.priceSaleBill;
+            });
+          }
+        });
+        result.amountProductEach.push(amount);
+        result.totalMoneyEach.push(totalMoney);
+      }
+      setResultByRange(result);
+      setListDates([...listDates]);
+    }
+    console.log(new Date(createdAtFrom), new Date(createdAtTo));
+  };
 
   return (
     <Box>
@@ -350,6 +477,7 @@ export const StatisticTable: React.FC = () => {
             <Tab label="Thống kê khách hàng" value="3" />
             <Tab label="Thống kê nhân viên" value="4" />
             <Tab label="Thống kê sản phẩm" value="5" />
+            <Tab label="Thống kê doanh thu theo thời gian" value="6" />
           </TabList>
         </Box>
         <TabPanel value="1">
@@ -456,6 +584,82 @@ export const StatisticTable: React.FC = () => {
                 {
                   label: "Số lượng sản phẩm đã mua",
                   data: resultTop5Products.amountProductEach,
+                  backgroundColor: "rgba(255, 99, 132, 0.5)",
+                },
+              ],
+            }}
+          />
+        </TabPanel>
+        <TabPanel value="6">
+          <Stack
+            direction={"row"}
+            justifyContent="center"
+            alignItems="center"
+            paddingBottom={5}
+            component={"form"}
+            onReset={() => {
+              alert("reeset");
+            }}
+            onSubmit={(e) => {
+              handleSearchAdvance(e);
+            }}
+          >
+            <Stack width={800}>
+              <CardCustom>
+                <Grid container spacing={2}>
+                  <Grid item xs={6}>
+                    <DateTimePickerCustom
+                      label="Từ ngày"
+                      handleFuncRef={dateHandler.current("createdAtFrom")}
+                    />
+                  </Grid>
+                  <Grid item xs={6}>
+                    <DateTimePickerCustom
+                      label="Đến ngày"
+                      handleFuncRef={dateHandler.current("createdAtTo")}
+                    />
+                  </Grid>
+                </Grid>
+                <Box
+                  sx={{
+                    width: "100%",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    paddingTop: 1,
+                  }}
+                >
+                  <Stack gap={2} flexDirection={"row"}>
+                    <ButtonCustom
+                      type="reset"
+                      variant="outlined"
+                      title={"Đặt lại"}
+                      startIcon={<ReplayIcon />}
+                    />
+                  </Stack>
+                  <Stack gap={2} flexDirection={"row"}>
+                    <ButtonCustom type="submit" title={"Tìm kiếm"} startIcon={<SearchIcon />} />
+                  </Stack>
+                </Box>
+              </CardCustom>
+            </Stack>
+          </Stack>
+
+          <Bar
+            options={{
+              responsive: true,
+            }}
+            data={{
+              labels: listDates as any,
+              datasets: [
+                {
+                  label: "Số tiền",
+                  data: resultByRange.totalMoneyEach,
+                  backgroundColor: "rgba(53, 162, 235, 0.5)",
+                },
+                {
+                  label: "Số lượng sản phẩm đã bán",
+                  data: resultByRange.amountProductEach,
                   backgroundColor: "rgba(255, 99, 132, 0.5)",
                 },
               ],
